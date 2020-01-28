@@ -1,0 +1,8 @@
+host: 23.229.237.194:3306/
+user: p485
+pass: project485
+
+DB Names:
+- 485_main
+- 485_users
+- 485_reqs
