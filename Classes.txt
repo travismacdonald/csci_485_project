@@ -1,0 +1,99 @@
+// 485_main Database
+class Confirmed {
+	String title, description, location, department;
+	Date date;
+	int room, fee;
+	
+	Confirmed() {
+	}
+	
+	Confirmed(String title, String description, String location, String department, Date date, int room, int fee) {
+		this.title = title;
+		this.description = description;
+		this.location = location;
+		this.department = department;
+		this.date = date;
+		this.room = room;
+		this.fee = fee;
+	}
+	
+	void addToDatabase(Confirmed obj) throws SQLException {
+		// Add obj to the database
+	}
+	
+	void removeFromDatabase(Confirmed obj) throws SQLException {
+		// Remove obj from the database
+	}
+	
+	// Add getters and setters
+	
+	Connection connect(String host, String name, String user, String pass) throws SQLException {
+		return DriverManager.getConnection("jdbc:mysql://" + host + name, user, pass);
+	}
+}
+
+
+
+// 485_reqs Database
+class Requested {
+	String title, location, description, department;
+	Date date;
+	int fee;
+	
+	Requested() {
+	}
+	
+	Requested(String title, String description, String location, String department, Date date, int fee) {
+		this.title = title;
+		this.description = description;
+		this.location = location;
+		this.department = department;
+		this.date = date;
+		this.fee = fee;
+	}
+	
+	void addToDatabase(Requested obj) throws SQLException {
+		// Add obj to the database
+	}
+	
+	void removeFromDatabase(Requested obj) throws SQLException {
+		// Remove obj from the database
+	}
+	
+	// Add getters and setters
+	
+	Connection connect(String host, String name, String user, String pass) throws SQLException {
+		return DriverManager.getConnection("jdbc:mysql://" + host + name, user, pass);
+	}
+}
+
+
+
+// 485_users Database
+class Users {
+	String name, pass;
+	boolean admin;
+	
+	Users() {
+	}
+	
+	Users(String name, String pass, boolean admin) {
+		this.name = name;
+		this.pass = pass;
+		this.admin = admin;
+	}
+	
+	void addToDataBase(Users obj) throws SQLException {
+		// Add obj to the database
+	}
+	
+	void removeFromDataBase(Users obj) throws SQLException {
+		// Remove obj from the database
+	}
+	
+	// Add getters and setters
+	
+	Connection connect(String host, String name, String user, String pass) throws SQLException {
+		return DriverManager.getConnection("jdbc:mysql://" + host + name, user, pass);
+	}
+}
