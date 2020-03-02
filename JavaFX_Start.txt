@@ -1,0 +1,30 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+public class Solution extends Application {
+	public static void main(String args[]) {
+		launch(args);
+	}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setTitle("Project");
+		
+		Pane home = new Pane();
+		Pane eventsPane = new Pane();
+		
+		Scene homeScene = new Scene(home, 1500D, 200D);
+		
+		Scene events = new Scene(eventsPane, 100D, 200D);
+		
+		primaryStage.setScene(homeScene);
+		
+		if (true) {
+			primaryStage.setScene(events);
+		}
+		primaryStage.show();
+	}
+	
+}
