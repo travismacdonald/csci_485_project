@@ -1,4 +1,4 @@
-package database485.Databases;
+package BulletinBoardProj.Databases;
 
 public class Users extends Database485 {
 	private String name, pass;
