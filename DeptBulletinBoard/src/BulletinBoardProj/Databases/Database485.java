@@ -1,4 +1,4 @@
-package database485.Databases;
+package BulletinBoardProj.Databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
