@@ -1,4 +1,4 @@
-package database485.Databases;
+package BulletinBoardProj.Databases;
 import java.sql.Date;
 
 public class Confirmed extends Database485 {
