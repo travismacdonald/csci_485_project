@@ -1,10 +1,11 @@
 package BulletinBoardProj;
-import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Date;
+import java.util.ArrayList;
+
+import BulletinBoardProj.Databases.Confirmed;
 
 public class Filter
 {
@@ -27,6 +28,7 @@ public class Filter
            rs = stmt.executeQuery("SELECT * FROM Confirmed ORDER BY DATE DESC");
            resultList = new ArrayList<>();
            Confirmed c;
+           /*
            while (rs.next()){
         	   c = new Confirmed();
                c.setID(rs.getString(1));
@@ -39,6 +41,7 @@ public class Filter
                c.getFee(rs.getDouble(8));
                resultList.add(c);
            }
+           */
            con.close();
        }
        catch(Exception e){
@@ -58,6 +61,7 @@ public class Filter
            rs = stmt.executeQuery("SELECT * FROM Confirmed ORDER BY DEPARTMENT ASC");
            resultList = new ArrayList<>();
            Confirmed c;
+           /*
            while (rs.next()){
         	   c = new Confirmed();
                c.setID(rs.getString(1));
@@ -70,6 +74,7 @@ public class Filter
                c.getFee(rs.getDouble(8));
                resultList.add(c);
            }
+           */
            con.close();
        }
        catch(Exception e){
@@ -89,9 +94,10 @@ public class Filter
            rs = stmt.executeQuery("SELECT * FROM Confirmed ORDER BY FEE ASC");
            resultList = new ArrayList<>();
            Confirmed c;
+           /*
            while (rs.next()){
         	   c = new Confirmed();
-               c.setID(rs.getString(1));
+               c.setId(rs.getString(1));
                c.setTitle(rs.getString(2));
                c.getDate(rs.getDate(3));
                c.getDescription(rs.getString(4));
@@ -101,6 +107,7 @@ public class Filter
                c.getFee(rs.getDouble(8));
                resultList.add(c);
            }
+           */
            con.close();
        }
        catch(Exception e){
