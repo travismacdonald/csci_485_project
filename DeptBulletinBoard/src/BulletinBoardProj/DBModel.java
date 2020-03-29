@@ -11,9 +11,9 @@ import BulletinBoardProj.Databases.Confirmed;
 
 public class DBModel {
 	
-	static Connection con;
-    static Statement stmt;
-    static ResultSet rs;
+	private Connection con;
+    private Statement stmt;
+    private ResultSet rs;
     
     String host = "23.229.237.194:3306/";
     String user = "p485"; 
@@ -38,6 +38,8 @@ public class DBModel {
         return getEvents(sqlConfirmedByFee);
     }
     
+    // Todo: Maybe putting the query on a background thread will improve performance
+    // Todo: Add parameter to specify a maximum amount of results from query
     private List<Confirmed> getEvents(String query) {
     	final List<Confirmed> resultList = new ArrayList<>();
     	try{

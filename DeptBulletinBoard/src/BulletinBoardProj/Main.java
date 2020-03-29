@@ -22,6 +22,7 @@ public class Main extends Application {
     private VBox leftBar;
     private ScrollPane scrollPane;
     private VBox scrollContent;
+    private List<VBox> eventVBoxList;
 
     final String topBarCss =
             "-fx-border-color: blue;\n" +
@@ -41,6 +42,10 @@ public class Main extends Application {
     	    "-fx-border-width: 3;\n" +
     	    "-fx-border-style: dashed;\n" +
     	    "-fx-background-color: transparent";
+    
+    final String eventCss = "";
+    
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -60,7 +65,7 @@ public class Main extends Application {
         
         // Bulletin Scroll
         scrollContent = new VBox();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 20; i++) {
             Label label = new Label("bitch");
             scrollContent.getChildren().add(label);
         }
@@ -93,13 +98,22 @@ public class Main extends Application {
     }
     
     private void showAllEvents(List<Confirmed> eventList) {
-    	// todo
     	for (Confirmed event : eventList) {
-    		scrollContent.getChildren().add(new Label(event.getTitle()));
+//    		scrollContent.getChildren().add(new Label(event.getTitle()));
+    		showEvent(event);
     	}
     }
     
     private void showEvent(Confirmed event) {
-    	// todo
+    	final VBox eventVBox = new VBox();
+    	Label title = new Label(event.getTitle());
+    	Label date = new Label(event.getDate().toString());
+    	Label description = new Label(event.getDescription());
+    	Label location = new Label(event.getLocation());
+    	Label department = new Label(event.getDepartment());
+    	Label fee = new Label(Double.toString(event.getFee()));
+    	
+    	eventVBox.getChildren().addAll(title, date, description, location, department, fee);
+    	scrollContent.getChildren().add(eventVBox);
     }
 }
