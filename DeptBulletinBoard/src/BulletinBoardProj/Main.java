@@ -1,100 +1,105 @@
 package BulletinBoardProj;
 
+
+import java.util.List;
+
+import BulletinBoardProj.Databases.Confirmed;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 
 public class Main extends Application {
 
-    final Group group = new Group();
-    final ScrollPane scrollPane = new ScrollPane();
+    private BorderPane borderPane;
+    private HBox topBar;
+    private VBox leftBar;
+    private ScrollPane scrollPane;
+    private VBox scrollContent;
 
-    final String topBorderCss =
+    final String topBarCss =
             "-fx-border-color: blue;\n" +
             "-fx-border-insets: 5;\n" +
             "-fx-border-width: 3;\n" +
             "-fx-border-style: dashed;\n";
+    
+    final String leftBarCss =
+            "-fx-border-color: green;\n" +
+            "-fx-border-insets: 5;\n" +
+            "-fx-border-width: 3;\n" +
+            "-fx-border-style: dashed;\n";
+    
+    final String scrollPaneCss =
+    		"-fx-border-color: red;\n" +
+    	    "-fx-border-insets: 5;\n" +
+    	    "-fx-border-width: 3;\n" +
+    	    "-fx-border-style: dashed;\n" +
+    	    "-fx-background-color: transparent";
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-
-//        BBModel bbModel = new BBModel(); // here is the model
-
+    public void start(Stage primaryStage) throws Exception {
+    	DBModel dbModel = new DBModel();
         setUpView(primaryStage);
-
-//        BorderPane borderPane = new BorderPane();
-//        HBox topBar = new HBox();
-//        topBar.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
-//        topBar.setMinHeight(100);
-//        borderPane.setLeft();
-
-//        borderPane.setTop(topBar);
-
-/*
-        VBox vBox = new VBox();
-        Label tl = new Label("Filters/Sortings go here.");
-        vBox.getChildren().add(tl);
-        vBox.setBackground(new Background(new BackgroundFill(Color.BLUE, null, null)));
-        vBox.prefHeightProperty().bind(primaryStage.heightProperty().multiply(1));
-
-        HBox hBox = new HBox();
-        Label hBoxLabel = new Label("Other features go here");
-        hBox.getChildren().add(hBoxLabel);
-        hBox.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
-//        hBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.9));
-        hBox.setMinWidth(500);
-        hBox.setLayoutX(140);
-        hBox.setMinHeight(80);
-
-        group.getChildren().add(vBox);
-        group.getChildren().add(hBox);
-        Scene scene = new Scene(group, 500, 500);
-*/
-//        Scene scene = new Scene(borderPane, 500, 500);
-//        // Setup stage
-//        primaryStage.setMinHeight(400);
-//        primaryStage.setMinWidth(500);
-//        primaryStage.initStyle(StageStyle.DECORATED);
-//        primaryStage.setTitle("CSCI 485");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-
-
+        showAllEvents(dbModel.getEventsByDate());
     }
 
     private void setUpView(Stage primaryStage) {
-        // Setup Border Pane
-        BorderPane borderPane = new BorderPane();
-        HBox topBar = new HBox();
-        topBar.setStyle(topBorderCss);
-//        topBar.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
+    	topBar = new HBox();
+        topBar.setStyle(topBarCss);
         topBar.setMinHeight(100);
+    	
+    	leftBar = new VBox();
+        leftBar.setStyle(leftBarCss);
+        leftBar.setMinWidth(100);
+        
+        // Bulletin Scroll
+        scrollContent = new VBox();
+        for (int i = 0; i < 200; i++) {
+            Label label = new Label("bitch");
+            scrollContent.getChildren().add(label);
+        }
+        scrollContent.setSpacing(10);
+        
+        scrollPane = new ScrollPane();
+        scrollPane.setContent(scrollContent);
+        scrollPane.setStyle(scrollPaneCss);
+        scrollPane.setMinSize(500, 500);
+        
 
-
+        borderPane = new BorderPane();
         borderPane.setTop(topBar);
+        borderPane.setLeft(leftBar);
+        borderPane.setCenter(scrollPane);
 
         Scene scene = new Scene(borderPane, 500, 500);
-        // Setup stage
         primaryStage.setMinHeight(400);
         primaryStage.setMinWidth(500);
         primaryStage.initStyle(StageStyle.DECORATED);
         primaryStage.setTitle("CSCI 485");
         primaryStage.setScene(scene);
-
         primaryStage.setMaximized(true);
-
         primaryStage.show();
     }
 
 
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    private void showAllEvents(List<Confirmed> eventList) {
+    	// todo
+    	for (Confirmed event : eventList) {
+    		scrollContent.getChildren().add(new Label(event.getTitle()));
+    	}
+    }
+    
+    private void showEvent(Confirmed event) {
+    	// todo
     }
 }
