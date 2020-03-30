@@ -5,6 +5,7 @@ import java.util.List;
 
 import BulletinBoardProj.Databases.Confirmed;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -23,6 +24,8 @@ public class Main extends Application {
     private ScrollPane scrollPane;
     private VBox scrollContent;
     private List<VBox> eventVBoxList;
+    
+    private int eventVBoxPadding = 10;
 
     final String topBarCss =
             "-fx-border-color: blue;\n" +
@@ -41,9 +44,13 @@ public class Main extends Application {
     	    "-fx-border-insets: 5;\n" +
     	    "-fx-border-width: 3;\n" +
     	    "-fx-border-style: dashed;\n" +
+    	    "-fx-padding: 20;\n" +
     	    "-fx-background-color: transparent";
     
-    final String eventCss = "";
+    final String eventVBoxCss = 
+    		"-fx-border-color: gray;\n" +
+            "-fx-border-width: 2;\n" + 
+    		"-fx-padding: 10";
     
     
 
@@ -99,21 +106,33 @@ public class Main extends Application {
     
     private void showAllEvents(List<Confirmed> eventList) {
     	for (Confirmed event : eventList) {
-//    		scrollContent.getChildren().add(new Label(event.getTitle()));
     		showEvent(event);
     	}
     }
     
     private void showEvent(Confirmed event) {
+    	final VBox eventVBox = makeEventVBox(event);
+    	scrollContent.getChildren().add(eventVBox);
+    }
+    
+    /* Formats event data into VBox */
+    private VBox makeEventVBox(Confirmed event) {
     	final VBox eventVBox = new VBox();
+    	
+    	// Event content
     	Label title = new Label(event.getTitle());
-    	Label date = new Label(event.getDate().toString());
-    	Label description = new Label(event.getDescription());
-    	Label location = new Label(event.getLocation());
-    	Label department = new Label(event.getDepartment());
-    	Label fee = new Label(Double.toString(event.getFee()));
+    	Label date = new Label("When: " + event.getDate().toString());
+    	Label description = new Label("What: " + event.getDescription());
+    	Label location = new Label("Where: " + event.getLocation());
+    	Label department = new Label("Dept: " + event.getDepartment());
+    	// Todo: make fee rounded to 2 decimal places.
+    	Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
+    	
+    	// Event style
+//    	eventVBox.setPadding(new Insets(eventVBoxPadding));
+    	eventVBox.setStyle(eventVBoxCss);
     	
     	eventVBox.getChildren().addAll(title, date, description, location, department, fee);
-    	scrollContent.getChildren().add(eventVBox);
+    	return eventVBox;
     }
 }
