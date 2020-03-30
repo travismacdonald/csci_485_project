@@ -24,14 +24,15 @@ public class Main extends Application {
     private ScrollPane scrollPane;
     private VBox scrollContent;
     private List<VBox> eventVBoxList;
-    
-    private int eventVBoxPadding = 10;
 
+    final String borderPaneCss =
+    		"";
+    
     final String topBarCss =
             "-fx-border-color: blue;\n" +
             "-fx-border-insets: 5;\n" +
             "-fx-border-width: 3;\n" +
-            "-fx-border-style: dashed;\n";
+            "-fx-border-style: solid;\n";
     
     final String leftBarCss =
             "-fx-border-color: green;\n" +
@@ -44,13 +45,21 @@ public class Main extends Application {
     	    "-fx-border-insets: 5;\n" +
     	    "-fx-border-width: 3;\n" +
     	    "-fx-border-style: dashed;\n" +
-    	    "-fx-padding: 20;\n" +
-    	    "-fx-background-color: transparent";
+    	    "-fx-padding: 20;\n";
+    
+    final String scrollContentCss = 
+    		"";
     
     final String eventVBoxCss = 
-    		"-fx-border-color: gray;\n" +
-            "-fx-border-width: 2;\n" + 
+    		"-fx-border-color: black;\n" +
+            "-fx-border-width: 3;\n" + 
     		"-fx-padding: 10";
+    
+    final String headingFont =
+    		"-fx-font: 34 calibri";
+    
+    final String normalFont =
+    		"-fx-font: 22 calibri";
     
     
 
@@ -72,18 +81,14 @@ public class Main extends Application {
         
         // Bulletin Scroll
         scrollContent = new VBox();
-        for (int i = 0; i < 20; i++) {
-            Label label = new Label("bitch");
-            scrollContent.getChildren().add(label);
-        }
-        scrollContent.setSpacing(10);
-        
+        scrollContent.setSpacing(30);
+        scrollContent.setStyle(scrollContentCss);
+
         scrollPane = new ScrollPane();
         scrollPane.setContent(scrollContent);
         scrollPane.setStyle(scrollPaneCss);
         scrollPane.setMinSize(500, 500);
         
-
         borderPane = new BorderPane();
         borderPane.setTop(topBar);
         borderPane.setLeft(leftBar);
@@ -118,21 +123,26 @@ public class Main extends Application {
     /* Formats event data into VBox */
     private VBox makeEventVBox(Confirmed event) {
     	final VBox eventVBox = new VBox();
+    	eventVBox.setUserData(event);
+    	eventVBox.setSpacing(20);
+    	eventVBox.setMinWidth(400);
+    	
     	
     	// Event content
     	Label title = new Label(event.getTitle());
     	Label date = new Label("When: " + event.getDate().toString());
-    	Label description = new Label("What: " + event.getDescription());
     	Label location = new Label("Where: " + event.getLocation());
     	Label department = new Label("Dept: " + event.getDepartment());
     	// Todo: make fee rounded to 2 decimal places.
     	Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
     	
     	// Event style
-//    	eventVBox.setPadding(new Insets(eventVBoxPadding));
     	eventVBox.setStyle(eventVBoxCss);
-    	
-    	eventVBox.getChildren().addAll(title, date, description, location, department, fee);
+    	eventVBox.getChildren().addAll(title, date, location, department, fee);
+    	eventVBox.getChildren().get(0).setStyle(headingFont);
+    	for (int i = 1; i < 5; i++) {
+    		eventVBox.getChildren().get(i).setStyle(normalFont);
+    	}
     	return eventVBox;
     }
 }
