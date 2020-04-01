@@ -48,7 +48,8 @@ public class Main extends Application {
     	    "-fx-border-insets: 5;\n" +
     	    "-fx-border-width: 3;\n" +
     	    "-fx-border-style: dashed;\n" +
-    	    "-fx-padding: 20;\n";
+    	    "-fx-padding: 20;\n" +
+    	    "-fx-background-color: transparent;\n";
     
     final String scrollContentCss = 
     		"";
@@ -65,10 +66,14 @@ public class Main extends Application {
     		"-fx-padding: 10;\n";
     
     final String headingFont =
-    		"-fx-font: 34 calibri";
+    		"-fx-font: 34 calibri;\n" + 
+    		"-fx-font-weight: bold;\n";
     
     final String normalFont =
-    		"-fx-font: 22 calibri";
+    		"-fx-font: 22 calibri;\n";
+    
+    final String cursorHand =
+    		"-fx-cursor: hand;\n";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -78,15 +83,32 @@ public class Main extends Application {
     }
 
     private void setUpView(Stage primaryStage) {
+    	/* SETUP TOP BAR */
     	topBar = new HBox();
         topBar.setStyle(topBarCss);
         topBar.setMinHeight(100);
     	
+        
+        /* SETUP LEFT BAR */
     	leftBar = new VBox();
         leftBar.setStyle(leftBarCss);
-        leftBar.setMinWidth(100);
+        leftBar.setMinWidth(180);
+        leftBar.setPadding(new Insets(10));
+        leftBar.setSpacing(15);
         
-        // Bulletin Scroll
+        Label orderByLabel = new Label("Order By:");
+        orderByLabel.setStyle(headingFont);
+        Label dateLabel = new Label("Date");
+        dateLabel.setStyle(normalFont + cursorHand);
+        Label deptLabel = new Label("Dept");
+        deptLabel.setStyle(normalFont + cursorHand);
+        Label feeLabel = new Label("Fee");
+        feeLabel.setStyle(normalFont + cursorHand);
+        
+        leftBar.getChildren().addAll(orderByLabel, dateLabel, deptLabel, feeLabel);
+        
+        
+        /* SETUP BULLETIN SCROLL */
         scrollContent = new VBox();
         scrollContent.setSpacing(30);
         scrollContent.setStyle(scrollContentCss);
