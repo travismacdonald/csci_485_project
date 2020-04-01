@@ -27,6 +27,7 @@ public class Main extends Application {
     private ScrollPane scrollPane;
     private VBox scrollContent;
     private List<VBox> eventVBoxList;
+    private DBModel dbModel;
 
     final String borderPaneCss =
     		"";
@@ -77,7 +78,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	DBModel dbModel = new DBModel();
+    	dbModel = new DBModel();
         setUpView(primaryStage);
         showAllEvents(dbModel.getEventsByDate());
     }
@@ -98,12 +99,34 @@ public class Main extends Application {
         
         Label orderByLabel = new Label("Order By:");
         orderByLabel.setStyle(headingFont);
+        
         Label dateLabel = new Label("Date");
         dateLabel.setStyle(normalFont + cursorHand);
+        dateLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            showAllEvents(dbModel.getEventsByDate());
+//   	        mouseEvent.consume();
+   	        }
+   	    });
         Label deptLabel = new Label("Dept");
         deptLabel.setStyle(normalFont + cursorHand);
+        deptLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            showAllEvents(dbModel.getEventsByDept());
+//   	        mouseEvent.consume();
+   	        }
+   	    });
         Label feeLabel = new Label("Fee");
         feeLabel.setStyle(normalFont + cursorHand);
+        feeLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            showAllEvents(dbModel.getEventsByFee());
+//   	        mouseEvent.consume();
+   	        }
+   	    });
         
         leftBar.getChildren().addAll(orderByLabel, dateLabel, deptLabel, feeLabel);
         
@@ -139,6 +162,7 @@ public class Main extends Application {
     }
     
     private void showAllEvents(List<Confirmed> eventList) {
+    	scrollContent.getChildren().clear();
     	for (Confirmed event : eventList) {
     		showEvent(event);
     	}
