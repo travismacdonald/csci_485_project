@@ -5,13 +5,16 @@ import java.util.List;
 
 import BulletinBoardProj.Databases.Confirmed;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -53,15 +56,19 @@ public class Main extends Application {
     final String eventVBoxCss = 
     		"-fx-border-color: black;\n" +
             "-fx-border-width: 3;\n" + 
-    		"-fx-padding: 10";
+    		"-fx-padding: 10;\n" +
+    		"-fx-cursor: hand;\n";
+    
+    final String eventDetailsVBoxCss = 
+    		"-fx-border-color: black;\n" +
+            "-fx-border-width: 3;\n" + 
+    		"-fx-padding: 10;\n";
     
     final String headingFont =
     		"-fx-font: 34 calibri";
     
     final String normalFont =
     		"-fx-font: 22 calibri";
-    
-    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -126,6 +133,14 @@ public class Main extends Application {
     	eventVBox.setUserData(event);
     	eventVBox.setSpacing(20);
     	eventVBox.setMinWidth(400);
+    	eventVBox.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+    	     @Override
+    	     public void handle(MouseEvent mouseEvent) {
+    	         System.out.println("Event " + event.getTitle() + " pressed");
+    	         showEventDetails(event);
+//    	         mouseEvent.consume();
+    	     }
+    	});
     	
     	
     	// Event content
@@ -144,5 +159,39 @@ public class Main extends Application {
     		eventVBox.getChildren().get(i).setStyle(normalFont);
     	}
     	return eventVBox;
+    }
+    
+    private VBox makeEventDetailVBox(Confirmed event) {
+    	final VBox eventVBox = new VBox();
+    	eventVBox.setUserData(event);
+    	eventVBox.setSpacing(20);
+    	eventVBox.setMinWidth(400);
+    	
+    	// Event content
+    	Label title = new Label(event.getTitle());
+    	Label details = new Label("Details: " + event.getDescription());
+    	Label date = new Label("When: " + event.getDate().toString());
+    	Label location = new Label("Where: " + event.getLocation());
+    	Label department = new Label("Dept: " + event.getDepartment());
+    	// Todo: make fee rounded to 2 decimal places.
+    	Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
+    	
+    	// Event style
+    	eventVBox.setStyle(eventDetailsVBoxCss); // todo: update style
+    	eventVBox.getChildren().addAll(title, details, date, location, department, fee);
+    	eventVBox.getChildren().get(0).setStyle(headingFont);
+    	for (int i = 1; i < 6; i++) {
+    		eventVBox.getChildren().get(i).setStyle(normalFont);
+    	}
+    	return eventVBox;
+    }
+    
+    private void showEventDetails(Confirmed event) {
+    	Stage eventDetailWindow = new Stage();
+    	VBox eventDetailVBox = makeEventDetailVBox(event);
+    	Scene scene = new Scene(eventDetailVBox, 500, 500);
+    	eventDetailWindow.setScene(scene);
+    	eventDetailWindow.initModality(Modality.APPLICATION_MODAL);
+    	eventDetailWindow.show();
     }
 }
