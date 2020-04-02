@@ -7,12 +7,15 @@ import BulletinBoardProj.Databases.Confirmed;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,7 +25,7 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
     private BorderPane borderPane;
-    private HBox topBar;
+    private GridPane topBar;
     private VBox leftBar;
     private ScrollPane scrollPane;
     private VBox scrollContent;
@@ -33,22 +36,14 @@ public class Main extends Application {
     		"";
     
     final String topBarCss =
-            "-fx-border-color: blue;\n" +
-            "-fx-border-insets: 5;\n" +
-            "-fx-border-width: 3;\n" +
-            "-fx-border-style: solid;\n";
+    		"-fx-padding: 20;\n" +
+    		"-fx-spacing: 20;\n" +
+    		"-fx-background-color: grey;\n";
     
     final String leftBarCss =
-            "-fx-border-color: green;\n" +
-            "-fx-border-insets: 5;\n" +
-            "-fx-border-width: 3;\n" +
-            "-fx-border-style: dashed;\n";
+            "-fx-background-color: black;\n";
     
     final String scrollPaneCss =
-    		"-fx-border-color: red;\n" +
-    	    "-fx-border-insets: 5;\n" +
-    	    "-fx-border-width: 3;\n" +
-    	    "-fx-border-style: dashed;\n" +
     	    "-fx-padding: 20;\n" +
     	    "-fx-background-color: transparent;\n";
     
@@ -73,8 +68,17 @@ public class Main extends Application {
     final String normalFont =
     		"-fx-font: 22 calibri;\n";
     
-    final String cursorHand =
+    final String filterHeadingFont =
+    		"-fx-font: 34 calibri;\n" +
+            "-fx-text-fill: white;\n" +
+    	    "-fx-font-weight: bold;\n";
+    
+    final String filterFontNormal =
+    		"-fx-font: 28 calibri;\n" +
+    		"-fx-text-fill: white;\n" +
     		"-fx-cursor: hand;\n";
+    
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -85,9 +89,53 @@ public class Main extends Application {
 
     private void setUpView(Stage primaryStage) {
     	/* SETUP TOP BAR */
-    	topBar = new HBox();
+    	topBar = new GridPane();
         topBar.setStyle(topBarCss);
         topBar.setMinHeight(100);
+        topBar.setHgap(80);
+
+        
+        Label homeLabel = new Label("HOME");
+        homeLabel.setStyle(filterFontNormal);
+        homeLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	// Todo
+   	        }
+   	    });
+        
+        Label createEventLabel = new Label("CREATE EVENT");
+        createEventLabel.setStyle(filterFontNormal);
+        createEventLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	// Todo
+   	        }
+   	    });
+        
+        Label loginLabel = new Label("LOGIN");
+        loginLabel.setStyle(filterFontNormal);
+        loginLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	// Todo
+   	        }
+   	    });
+        
+        Label signupLabel = new Label("SIGNUP");
+        signupLabel.setStyle(filterFontNormal);
+        signupLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	// Todo
+   	        }
+   	    });
+        
+        topBar.add(homeLabel, 0, 0);
+        topBar.add(createEventLabel, 1, 0);
+        topBar.add(loginLabel, 2, 0);
+        topBar.add(signupLabel, 3, 0);
+//        topBar.getChildren().addAll(homeLabel, createEventLabel, loginLabel, signupLabel);
     	
         
         /* SETUP LEFT BAR */
@@ -97,11 +145,11 @@ public class Main extends Application {
         leftBar.setPadding(new Insets(10));
         leftBar.setSpacing(15);
         
-        Label orderByLabel = new Label("Order By:");
-        orderByLabel.setStyle(headingFont);
+        Label orderByLabel = new Label("ORDER BY:");
+        orderByLabel.setStyle(filterHeadingFont);
         
         Label dateLabel = new Label("Date");
-        dateLabel.setStyle(normalFont + cursorHand);
+        dateLabel.setStyle(filterFontNormal);
         dateLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
@@ -110,7 +158,7 @@ public class Main extends Application {
    	        }
    	    });
         Label deptLabel = new Label("Dept");
-        deptLabel.setStyle(normalFont + cursorHand);
+        deptLabel.setStyle(filterFontNormal);
         deptLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
@@ -119,7 +167,7 @@ public class Main extends Application {
    	        }
    	    });
         Label feeLabel = new Label("Fee");
-        feeLabel.setStyle(normalFont + cursorHand);
+        feeLabel.setStyle(filterFontNormal);
         feeLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
@@ -143,6 +191,7 @@ public class Main extends Application {
         
         borderPane = new BorderPane();
         borderPane.setTop(topBar);
+//        topBar.prefWidthProperty().bind(borderPane.widthProperty());
         borderPane.setLeft(leftBar);
         borderPane.setCenter(scrollPane);
 
