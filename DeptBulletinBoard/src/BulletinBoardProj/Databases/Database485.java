@@ -50,7 +50,7 @@ public abstract class Database485 {
 					name = "485_main";
 				} else if (this instanceof Requested) {
 					name = "485_reqs";
-				} else if (this instanceof Users) {
+				} else if (this instanceof User) {
 					name = "485_users";
 				}
 				con = DriverManager.getConnection("jdbc:mysql://" + this.host + name, this.user, this.password);
@@ -91,7 +91,7 @@ public abstract class Database485 {
 			stmt = con.createStatement();
 		} else if (this instanceof Requested) {
 			System.out.println("Requested");
-		} else if (this instanceof Users) {
+		} else if (this instanceof User) {
 			System.out.println("Users");
 		}
 	}
@@ -101,7 +101,7 @@ public abstract class Database485 {
 			System.out.println("Confirmed");
 		} else if (this instanceof Requested) {
 			System.out.println("Requested");
-		} else if (this instanceof Users) {
+		} else if (this instanceof User) {
 			System.out.println("Users");
 		}
 	}

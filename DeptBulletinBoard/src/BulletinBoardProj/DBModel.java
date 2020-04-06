@@ -17,10 +17,10 @@ public class DBModel {
     private Statement stmt;
     private ResultSet rs;
     
-    String host = "23.229.237.194:3306/";
-    String user = "p485"; 
-    String pass = "project485"; 
-    String name = "485_main";
+    private final String host = "23.229.237.194:3306/";
+    private final String user = "p485"; 
+    private final String pass = "project485"; 
+    private final String name = "485_main";
     
     private final String sqlConfirmedByDate = "SELECT * FROM Confirmed ORDER BY DATE DESC";
     private final String sqlConfirmedByDept = "SELECT * FROM Confirmed ORDER BY DEPARTMENT ASC";
