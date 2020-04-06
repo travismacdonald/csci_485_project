@@ -5,7 +5,6 @@ import java.util.List;
 import BulletinBoardProj.UIController;
 import BulletinBoardProj.Databases.Confirmed;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -21,7 +20,8 @@ public class HomePage implements BBPage {
 
     private BorderPane borderPane;
     private GridPane topBar;
-    private VBox leftBar;
+//    private VBox filterBar;
+    private FilterBar filterBar;
     private ScrollPane scrollPane;
     private VBox scrollContent;
     private List<VBox> eventVBoxList;
@@ -36,9 +36,6 @@ public class HomePage implements BBPage {
     		"-fx-padding: 30;\n" +
     		"-fx-spacing: 20;\n" +
     		"-fx-background-color: grey;\n";
-    
-    final String leftBarCss =
-            "-fx-background-color: black;\n";
     
     final String scrollPaneCss =
     	    "-fx-padding: 20;\n" +
@@ -229,43 +226,26 @@ public class HomePage implements BBPage {
         topBar.add(adminLabel, 4, 0);
     	
         
-        /* SETUP LEFT BAR */
-    	leftBar = new VBox();
-        leftBar.setStyle(leftBarCss);
-        leftBar.setMinWidth(180);
-        leftBar.setPadding(new Insets(10));
-        leftBar.setSpacing(15);
-        
-        Label orderByLabel = new Label("ORDER BY:");
-        orderByLabel.setStyle(filterHeadingFont);
-        
-        Label dateLabel = new Label("Date");
-        dateLabel.setStyle(filterFontNormal);
-        dateLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        /* Setup click listeners for filter bar */
+        filterBar = new FilterBar();
+        filterBar.getDateLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
    	            controller.onDateFilter();
    	        }
    	    });
-        Label deptLabel = new Label("Dept");
-        deptLabel.setStyle(filterFontNormal);
-        deptLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        filterBar.getDeptLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
    	            controller.onDeptFilter();
    	        }
    	    });
-        Label feeLabel = new Label("Fee");
-        feeLabel.setStyle(filterFontNormal);
-        feeLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        filterBar.getFeeLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
    	            controller.onFeeFilter();
    	        }
    	    });
-        
-        leftBar.getChildren().addAll(orderByLabel, dateLabel, deptLabel, feeLabel);
-        
         
         /* SETUP BULLETIN SCROLL */
         scrollContent = new VBox();
@@ -280,7 +260,7 @@ public class HomePage implements BBPage {
         borderPane = new BorderPane();
         borderPane.setTop(topBar);
 //        topBar.prefWidthProperty().bind(borderPane.widthProperty());
-        borderPane.setLeft(leftBar);
+        borderPane.setLeft(filterBar.getVBox());
         borderPane.setCenter(scrollPane);
 	}
 	
