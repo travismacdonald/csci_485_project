@@ -9,6 +9,7 @@ import java.util.List;
 
 import BulletinBoardProj.Databases.Confirmed;
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.Databases.Requested;
 
 public class DBModel {
 	
@@ -33,59 +34,62 @@ public class DBModel {
     public DBModel() {}
     
     public List<Event> getConfirmedEventsByDate() {
-        return getEvents(sqlConfirmedByDate);
+        return getEvents(sqlConfirmedByDate, true);
     }
     
     public List<Event> getConfirmedEventsByDept() {
-        return getEvents(sqlConfirmedByDept);
+        return getEvents(sqlConfirmedByDept, true);
     }
     
     public List<Event> getConfirmedEventsByFee() {
-        return getEvents(sqlConfirmedByFee);
+        return getEvents(sqlConfirmedByFee, true);
     }
     
     public List<Event> getRequestedEventsByDate() {
-        return getEvents(sqlRequestedByDate);
+        return getEvents(sqlRequestedByDate, false);
     }
     
     public List<Event> getRequestedEventsByDept() {
-        return getEvents(sqlRequestedByDept);
+        return getEvents(sqlRequestedByDept, false);
     }
     
     public List<Event> getRequestedEventsByFee() {
-        return getEvents(sqlRequestedByFee);
+        return getEvents(sqlRequestedByFee, false);
     }
     
     // Todo: Maybe putting the query on a background thread will improve performance
     // Todo: Add parameter to specify a maximum amount of results from query to avoid overload
-    private List<Event> getEvents(String query) {
+    private List<Event> getEvents(String query, boolean isConfirmed) {
     	final List<Event> resultList = new ArrayList<>();
     	try{
-            System.out.println("Attempting to connect to the database . . .");
             con = DriverManager.getConnection("jdbc:mysql://" + host + name, user, pass);
-            System.out.println("Connection to database successful!");
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
             
-            Event confirmed;
             while (rs.next()) {
-         	    confirmed = (Event) new Confirmed();
-                confirmed.setId(rs.getString(1));
-                confirmed.setTitle(rs.getString(2));
-                confirmed.setDate(rs.getDate(3));
-                confirmed.setDescription(rs.getString(4));
-                confirmed.setLocation(rs.getString(5));
-                confirmed.setRoom(rs.getInt(6));
-                confirmed.setDepartment(rs.getString(7));
-                confirmed.setFee(rs.getDouble(8));
-                resultList.add(confirmed);
+                // Todo: kind of a hacky way of dealing with confirmed vs requested
+                final Event event;
+                if (isConfirmed) {
+                	event = new Confirmed();
+                }
+                else {
+                	event = new Requested();
+                }
+                event.setId(rs.getString(1));
+                event.setTitle(rs.getString(2));
+                event.setDate(rs.getDate(3));
+                event.setDescription(rs.getString(4));
+                event.setLocation(rs.getString(5));
+                event.setRoom(rs.getInt(6));
+                event.setDepartment(rs.getString(7));
+                event.setFee(rs.getDouble(8));
+                resultList.add(event);
             }
             con.close();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
-        System.out.println("\nSession Complete.");
         return resultList;
     }
 	

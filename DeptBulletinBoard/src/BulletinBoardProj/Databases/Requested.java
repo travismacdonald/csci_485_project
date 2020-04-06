@@ -1,7 +1,7 @@
 package BulletinBoardProj.Databases;
 import java.sql.Date;
 
-public class Requested extends Database485 {
+public class Requested extends Database485 implements Event {
 	private String id, title, location, description, department;
 	private Date date;
 	private double fee;

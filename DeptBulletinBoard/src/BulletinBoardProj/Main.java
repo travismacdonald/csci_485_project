@@ -1,36 +1,18 @@
 package BulletinBoardProj;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
-import BulletinBoardProj.Databases.Confirmed;
-import BulletinBoardProj.Databases.Database485;
 import BulletinBoardProj.Databases.Event;
-import BulletinBoardProj.Databases.Requested;
-import BulletinBoardProj.ui.AdminPage;
-import BulletinBoardProj.ui.BBPage;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
-import BulletinBoardProj.ui.HomePage;
-import BulletinBoardProj.ui.LoginPage;
 import BulletinBoardProj.ui.NavBar;
-import BulletinBoardProj.ui.SignupPage;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -68,6 +50,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
     	dbModel = new DBModel();
     	filterBarIsVisible = false;
+    	this.primaryStage = primaryStage;
     	
     	setupView();
         navToApplicationStart();
@@ -94,7 +77,6 @@ public class Main extends Application {
     	
     	/* Setup click listeners for navigation bar */
     	
-    	borderPane.setTop(navBar.getPane());
     	navBar.getHomeLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
@@ -128,7 +110,6 @@ public class Main extends Application {
 		
 		/* Setup click listeners for filter bar */
 		
-        filterBar = new FilterBar();
         filterBar.getDateLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
@@ -147,6 +128,8 @@ public class Main extends Application {
    	            onFeeFilter();
    	        }
    	    });
+        
+    	borderPane.setTop(navBar.getPane());
     	navToHomePage();
     }
     
@@ -157,6 +140,7 @@ public class Main extends Application {
     	}
     	curPage = Page.HOME;
     	onDateFilter();
+    	borderPane.setCenter(eventScroll.getPane());
     }
     
     private void navToAdminPage() {
