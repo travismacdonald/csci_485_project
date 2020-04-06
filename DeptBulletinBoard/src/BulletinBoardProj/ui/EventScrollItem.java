@@ -1,6 +1,7 @@
 package BulletinBoardProj.ui;
 
 import BulletinBoardProj.Databases.Confirmed;
+import BulletinBoardProj.Databases.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -24,26 +25,28 @@ public class EventScrollItem {
     private VBox vBox;
 			
 	
-	public EventScrollItem(Confirmed event) {
-		setupView();
+	public EventScrollItem(Event event) {
+		setupView(event);
 	}
 	
 	public VBox getPane() {
 		return vBox;
 	}
 	
-	private void setupView() {
+	private void setupView(Event event) {
 		final VBox eventVBox = new VBox();
     	eventVBox.setUserData(event);
     	eventVBox.setSpacing(20);
     	eventVBox.setMinWidth(400);
-    	eventVBox.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-    	     @Override
-    	     public void handle(MouseEvent mouseEvent) {
-    	         System.out.println("Event " + event.getTitle() + " pressed");
-    	         showEventDetails(event);
-    	     }
-    	});
+    	
+    	// click listener moved to controller class
+//    	eventVBox.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+//    	     @Override
+//    	     public void handle(MouseEvent mouseEvent) {
+//    	         System.out.println("Event " + event.getTitle() + " pressed");
+//    	         showEventDetails(event);
+//    	     }
+//    	});
     	
     	
     	// Event content
@@ -55,13 +58,12 @@ public class EventScrollItem {
     	Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
     	
     	// Event style
-    	eventVBox.setStyle(eventVBoxCss);
+    	eventVBox.setStyle(itemCss);
     	eventVBox.getChildren().addAll(title, date, location, department, fee);
     	eventVBox.getChildren().get(0).setStyle(headingFont);
     	for (int i = 1; i < 5; i++) {
     		eventVBox.getChildren().get(i).setStyle(normalFont);
     	}
-    	return eventVBox;
 	}
     
 	

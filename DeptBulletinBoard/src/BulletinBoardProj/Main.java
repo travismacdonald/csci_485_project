@@ -6,9 +6,12 @@ import java.util.List;
 
 import BulletinBoardProj.Databases.Confirmed;
 import BulletinBoardProj.Databases.Database485;
+import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.Databases.Requested;
 import BulletinBoardProj.ui.AdminPage;
 import BulletinBoardProj.ui.BBPage;
 import BulletinBoardProj.ui.EventScroll;
+import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
 import BulletinBoardProj.ui.HomePage;
 import BulletinBoardProj.ui.LoginPage;
@@ -62,6 +65,9 @@ public class Main extends Application implements UIController {
     final private int minWidth = 800;
     final private int minHeight = 600;
     
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -172,77 +178,104 @@ public class Main extends Application implements UIController {
     
     private void navToLoginPage() {
     	curPage = Page.LOGIN;
-    }
-    
-//    private 
-//    
-//    private Scene getHomePage() {
-//    	if (homePage == null) {
-//    	    homePage = new HomePage();
-//    	    homePage.showAllEvents(dbModel.getEventsByDate());
-//    	    homePage.setController(this);
-//    	    curPage = homePage;
-//    	}
-//    	return new Scene(homePage.getPane());
-//    }
-//    
-//    private Scene getAdminPage() {
-//    	if (adminPage == null) {
-//    		adminPage = new AdminPage();
-//    		// adminPage.showAllEvents(dbModel.getEventsByDate()) // todo: write method for requested events
-//    		adminPage.setController(this);
-//    		curPage = adminPage;
-//    	}
-//    	return new Scene(adminPage.getPane());
-//    }
-    
-//    private Scene getLoginPage() {
-//    	return null; // todo
-//    }
-//    
-//    private Scene getSignupPage() {
-//    	return null; // todo
-//    }
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
+    }    
 
 	@Override
 	public void onDateFilter() {
+		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-//			homePage.showAllEvents(dbModel.getEventsByDate());
-			// TODO: scroll.showall ...
+			final List<Confirmed> eventList = dbModel.getConfirmedEventsByDate();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
+		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			// TODO: scroll.showallrequested ...
+			final List<Requested> eventList = dbModel.getRequestedEventsByDate();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowAdminDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
 	}
 
 	@Override
 	public void onFeeFilter() {
+		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-//			homePage.showAllEvents(dbModel.getEventsByDate());
-			// TODO: scroll.showall ...
+			final List<Confirmed> eventList = dbModel.getConfirmedEventsByFee();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
+		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			// TODO: scroll.showallrequested ...
+			final List<Requested> eventList = dbModel.getRequestedEventsByFee();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowAdminDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
 		
 	}
 
 	@Override
 	public void onDeptFilter() {
+		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-//			homePage.showAllEvents(dbModel.getEventsByDate());
-			final List<Confirmed> eventList = dbModel.getEventsByDate();
-			
-			// TODO: scroll.showall ...
+			final List<Confirmed> eventList = dbModel.getConfirmedEventsByDept();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
+		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			// TODO: scroll.showallrequested ...
+			final List<Requested> eventList = dbModel.getRequestedEventsByDept();
+			for (Confirmed event : eventList) {
+				final EventScrollItem item = new EventScrollItem(event);
+				setOnClickShowAdminDetails(item);
+				eventScroll.addEventItem(item);
+			}
 		}
+	}
+	
+	private void showAllEvents(List<Event> eventList) {
+		for (Event event : eventList) {
+			final EventScrollItem item = new EventScrollItem(event);
+			setOnClickShowDetails(item);
+			eventScroll.addEventItem(item);
+		}
+	}
+	
+	/**
+	 * Helper function to set on click listener for regular events.
+	 */
+	private void setOnClickShowDetails(EventScrollItem item) {
+		item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            // TODO: show event details
+   	        }
+   	    });
+	}
+	
+	/**
+	 * Helper function to set on click listener for admin events.
+	 */
+	private void setOnClickShowAdminDetails(EventScrollItem item) {
+		item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            // TODO: show admin event details (aka approve/reject)
+   	        }
+   	    });
 	}
 }

@@ -1,6 +1,6 @@
 package BulletinBoardProj.ui;
 
-import BulletinBoardProj.Databases.Confirmed;
+import BulletinBoardProj.Databases.Event;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
