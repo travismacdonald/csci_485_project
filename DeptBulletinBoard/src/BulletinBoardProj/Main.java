@@ -4,6 +4,7 @@ package BulletinBoardProj;
 import java.util.List;
 
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
@@ -212,10 +213,12 @@ public class Main extends Application {
 	   	        @Override
 	   	        public void handle(MouseEvent mouseEvent) {
 	   	            if (curPage == Page.HOME) {
-	   	            	// TODO
+	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	window.getStage().show();
 	   	            }
 	   	            else if (curPage == Page.ADMIN) {
-	   	            	// TODO
+	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	window.getStage().show();
 	   	            }
 	   	        }
 	   	    });
