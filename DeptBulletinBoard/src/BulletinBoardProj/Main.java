@@ -36,7 +36,7 @@ import javafx.stage.StageStyle;
 
 // Todo: put scroll bar back to top when events get filtered
 
-public class Main extends Application implements UIController {
+public class Main extends Application {
 
 	private enum Page {
 		HOME,
@@ -192,7 +192,6 @@ public class Main extends Application implements UIController {
     	curPage = Page.LOGIN;
     }    
 
-	@Override
 	public void onDateFilter() {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByDate());
@@ -202,7 +201,6 @@ public class Main extends Application implements UIController {
 		}
 	}
 
-	@Override
 	public void onFeeFilter() {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByFee());
@@ -213,7 +211,6 @@ public class Main extends Application implements UIController {
 		
 	}
 
-	@Override
 	public void onDeptFilter() {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByDept());
