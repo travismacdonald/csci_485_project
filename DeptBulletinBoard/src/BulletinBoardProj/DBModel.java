@@ -20,7 +20,8 @@ public class DBModel {
     private final String host = "23.229.237.194:3306/";
     private final String user = "p485"; 
     private final String pass = "project485"; 
-    private final String name = "485_main";
+    private final String mainDBName = "485_main";
+    private final String reqDBName = "485_reqs";
     
     private final String sqlConfirmedByDate = "SELECT * FROM Confirmed ORDER BY DATE DESC";
     private final String sqlConfirmedByDept = "SELECT * FROM Confirmed ORDER BY DEPARTMENT ASC";
@@ -62,7 +63,14 @@ public class DBModel {
     private List<Event> getEvents(String query, boolean isConfirmed) {
     	final List<Event> resultList = new ArrayList<>();
     	try{
-            con = DriverManager.getConnection("jdbc:mysql://" + host + name, user, pass);
+    		final String dbName;
+    		if (isConfirmed) {
+    			dbName = mainDBName;
+    		}
+    		else {
+    			dbName = reqDBName;
+    		}
+            con = DriverManager.getConnection("jdbc:mysql://" + host + dbName, user, pass);
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
             

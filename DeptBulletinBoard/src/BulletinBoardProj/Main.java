@@ -142,6 +142,9 @@ public class Main extends Application {
     	curPage = Page.HOME;
     	onDateFilter();
     	borderPane.setCenter(eventScroll.getPane());
+    	
+    	// TODO: delete this later; just testing for now
+    	navBar.showAdminLabel();
     }
     
     private void navToAdminPage() {

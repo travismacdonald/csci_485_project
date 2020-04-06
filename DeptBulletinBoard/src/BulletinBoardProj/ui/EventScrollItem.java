@@ -10,6 +10,7 @@ public class EventScrollItem {
     		"-fx-border-color: black;\n" +
             "-fx-border-width: 3;\n" + 
     		"-fx-padding: 10;\n" +
+    		"-fx-background-color: white;\n" +
     		"-fx-cursor: hand;\n";
     
     final String normalFont =
