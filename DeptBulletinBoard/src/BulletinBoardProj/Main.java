@@ -45,22 +45,17 @@ public class Main extends Application implements UIController {
 		LOGIN,
 		SIGNUP
 	}
-	
-//	private HomePage homePage = null;
-//	private LoginPage loginPage = null;
-//	private AdminPage adminPage = null;
-//	private SignupPage signupPage = null;
 
     private DBModel dbModel;
     private Stage primaryStage;
     private BorderPane borderPane;
-    private Page curPage;
     
     private FilterBar filterBar;
     private EventScroll eventScroll;
     private NavBar navBar;
     
     private boolean filterBarIsVisible;
+    private Page curPage;
     
     final private int minWidth = 800;
     final private int minHeight = 600;
@@ -165,117 +160,85 @@ public class Main extends Application implements UIController {
     }
     
     private void navToAdminPage() {
+    	if (!filterBarIsVisible) {
+    	    borderPane.setLeft(filterBar.getPane());
+    	    filterBarIsVisible = true;
+    	}
     	curPage = Page.ADMIN;
+    	onDateFilter();
     }
     
     private void navToCreateEventPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
     	curPage = Page.CREATE_EVENT;
     }
     
     private void navToSignupPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
     	curPage = Page.SIGNUP;
     }
     
     private void navToLoginPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
     	curPage = Page.LOGIN;
     }    
 
 	@Override
 	public void onDateFilter() {
-		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-			final List<Confirmed> eventList = dbModel.getConfirmedEventsByDate();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getConfirmedEventsByDate());
 		}
-		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			final List<Requested> eventList = dbModel.getRequestedEventsByDate();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowAdminDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getRequestedEventsByDate());
 		}
 	}
 
 	@Override
 	public void onFeeFilter() {
-		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-			final List<Confirmed> eventList = dbModel.getConfirmedEventsByFee();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getConfirmedEventsByFee());
 		}
-		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			final List<Requested> eventList = dbModel.getRequestedEventsByFee();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowAdminDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getRequestedEventsByFee());
 		}
 		
 	}
 
 	@Override
 	public void onDeptFilter() {
-		/* Set on click for confirmed events */
 		if (curPage == Page.HOME) {
-			final List<Confirmed> eventList = dbModel.getConfirmedEventsByDept();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getConfirmedEventsByDept());
 		}
-		/* Set on click for admin events */
 		else if (curPage == Page.ADMIN) {
-			final List<Requested> eventList = dbModel.getRequestedEventsByDept();
-			for (Confirmed event : eventList) {
-				final EventScrollItem item = new EventScrollItem(event);
-				setOnClickShowAdminDetails(item);
-				eventScroll.addEventItem(item);
-			}
+			showAllEvents(dbModel.getRequestedEventsByDept());
 		}
 	}
 	
 	private void showAllEvents(List<Event> eventList) {
+		eventScroll.clear();
 		for (Event event : eventList) {
 			final EventScrollItem item = new EventScrollItem(event);
-			setOnClickShowDetails(item);
+			item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+	   	        @Override
+	   	        public void handle(MouseEvent mouseEvent) {
+	   	            if (curPage == Page.HOME) {
+	   	            	// TODO
+	   	            }
+	   	            else if (curPage == Page.ADMIN) {
+	   	            	// TODO
+	   	            }
+	   	        }
+	   	    });
 			eventScroll.addEventItem(item);
 		}
-	}
-	
-	/**
-	 * Helper function to set on click listener for regular events.
-	 */
-	private void setOnClickShowDetails(EventScrollItem item) {
-		item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-   	        @Override
-   	        public void handle(MouseEvent mouseEvent) {
-   	            // TODO: show event details
-   	        }
-   	    });
-	}
-	
-	/**
-	 * Helper function to set on click listener for admin events.
-	 */
-	private void setOnClickShowAdminDetails(EventScrollItem item) {
-		item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-   	        @Override
-   	        public void handle(MouseEvent mouseEvent) {
-   	            // TODO: show admin event details (aka approve/reject)
-   	        }
-   	    });
 	}
 }
