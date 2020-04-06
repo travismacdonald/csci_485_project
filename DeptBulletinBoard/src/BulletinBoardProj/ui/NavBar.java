@@ -89,7 +89,7 @@ public class NavBar {
         hBox.getChildren().add(createEventLabel);
         hBox.getChildren().add(loginLabel);
         hBox.getChildren().add(signupLabel);
-        /* doesn't add the admin label by default - must be explicitly added */
+        /* doesn't add adminLabel by default - must be explicitly added */
 	}
 	
 }
