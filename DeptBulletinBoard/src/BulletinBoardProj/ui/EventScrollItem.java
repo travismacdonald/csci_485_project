@@ -1,10 +1,7 @@
 package BulletinBoardProj.ui;
 
-import BulletinBoardProj.Databases.Confirmed;
 import BulletinBoardProj.Databases.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 public class EventScrollItem {
@@ -34,35 +31,26 @@ public class EventScrollItem {
 	}
 	
 	private void setupView(Event event) {
-		final VBox eventVBox = new VBox();
-    	eventVBox.setUserData(event);
-    	eventVBox.setSpacing(20);
-    	eventVBox.setMinWidth(400);
-    	
-    	// click listener moved to controller class
-//    	eventVBox.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//    	     @Override
-//    	     public void handle(MouseEvent mouseEvent) {
-//    	         System.out.println("Event " + event.getTitle() + " pressed");
-//    	         showEventDetails(event);
-//    	     }
-//    	});
+		vBox = new VBox();
+    	vBox.setUserData(event);
+    	vBox.setSpacing(20);
+    	vBox.setMinWidth(400);
     	
     	
     	// Event content
-    	Label title = new Label(event.getTitle());
-    	Label date = new Label("When: " + event.getDate().toString());
-    	Label location = new Label("Where: " + event.getLocation());
-    	Label department = new Label("Dept: " + event.getDepartment());
+    	final Label title = new Label(event.getTitle());
+    	final Label date = new Label("When: " + event.getDate().toString());
+    	final Label location = new Label("Where: " + event.getLocation());
+    	final Label department = new Label("Dept: " + event.getDepartment());
     	// Todo: make fee rounded to 2 decimal places.
-    	Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
+    	final Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
     	
     	// Event style
-    	eventVBox.setStyle(itemCss);
-    	eventVBox.getChildren().addAll(title, date, location, department, fee);
-    	eventVBox.getChildren().get(0).setStyle(headingFont);
+    	vBox.setStyle(itemCss);
+    	vBox.getChildren().addAll(title, date, location, department, fee);
+    	vBox.getChildren().get(0).setStyle(headingFont);
     	for (int i = 1; i < 5; i++) {
-    		eventVBox.getChildren().get(i).setStyle(normalFont);
+    		vBox.getChildren().get(i).setStyle(normalFont);
     	}
 	}
     
