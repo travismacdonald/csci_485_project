@@ -1,9 +1,7 @@
 package BulletinBoardProj.ui;
 
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -23,6 +21,8 @@ public class FilterBar {
     		"-fx-cursor: hand;\n";
     
     final String filterBarCss =
+    		"-fx-padding: 10;\n" +
+    	    "-fx-spacing: 15;\n" +
             "-fx-background-color: black;\n";
     
     private VBox vBox;
@@ -36,7 +36,7 @@ public class FilterBar {
 		setupView();
 	}
 	
-	public VBox getVBox() {
+	public Pane getPane() {
 		return vBox;
 	}
 	
@@ -56,9 +56,7 @@ public class FilterBar {
 		/* SETUP LEFT BAR */
     	vBox = new VBox();
         vBox.setStyle(filterBarCss);
-        vBox.setMinWidth(180); // todo: move to css
-        vBox.setPadding(new Insets(10)); // todo: move to css
-        vBox.setSpacing(15); // todo: move to css
+        vBox.setMinWidth(180); // TODO: move to CSS
         
         orderByLabel = new Label("ORDER BY:");
         orderByLabel.setStyle(filterHeadingFont);

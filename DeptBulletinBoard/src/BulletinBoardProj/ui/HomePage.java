@@ -10,32 +10,28 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
+/**
+ * Class that hosts and organizes a collection of individual components.
+ */
 public class HomePage implements BBPage {
 
     private BorderPane borderPane;
-    private GridPane topBar;
-//    private VBox filterBar;
+    private NavBar navBar;
     private FilterBar filterBar;
     private ScrollPane scrollPane;
     private VBox scrollContent;
-    private List<VBox> eventVBoxList;
     
     private UIController controller;
 
 	
     final String borderPaneCss =
     		"";
-    
-    final String topBarCss =
-    		"-fx-padding: 30;\n" +
-    		"-fx-spacing: 20;\n" +
-    		"-fx-background-color: grey;\n";
     
     final String scrollPaneCss =
     	    "-fx-padding: 20;\n" +
@@ -62,15 +58,6 @@ public class HomePage implements BBPage {
     final String normalFont =
     		"-fx-font: 22 calibri;\n";
     
-    final String filterHeadingFont =
-    		"-fx-font: 34 calibri;\n" +
-            "-fx-text-fill: white;\n" +
-    	    "-fx-font-weight: bold;\n";
-    
-    final String filterFontNormal =
-    		"-fx-font: 28 calibri;\n" +
-    		"-fx-text-fill: white;\n" +
-    		"-fx-cursor: hand;\n";
 	
 	public HomePage() {
 		setupPane();
@@ -165,68 +152,44 @@ public class HomePage implements BBPage {
     }
 	
 	private void setupPane() {
-		/* SETUP TOP BAR */
-    	topBar = new GridPane();
-        topBar.setStyle(topBarCss);
-        topBar.setMinHeight(100);
-        topBar.setHgap(80);
-        
-        Label homeLabel = new Label("HOME");
-        homeLabel.setStyle(filterFontNormal);
-        homeLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+		/* Setup click listeners for navigation bar */
+		
+		navBar = new NavBar();
+		navBar.getHomeLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	// Todo
+   	        	// TODO
    	        }
    	    });
-        
-        Label createEventLabel = new Label("CREATE EVENT");
-        createEventLabel.setStyle(filterFontNormal);
-        createEventLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		navBar.getLoginLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	// Todo
+   	        	// TODO
    	        }
    	    });
-        
-        Label loginLabel = new Label("LOGIN");
-        loginLabel.setStyle(filterFontNormal);
-        loginLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		navBar.getSignupLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	// Todo
+   	        	// TODO
    	        }
    	    });
-        
-        Label signupLabel = new Label("SIGNUP");
-        signupLabel.setStyle(filterFontNormal);
-        signupLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		navBar.getAdminLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	// Todo
+   	        	// TODO
    	        }
    	    });
-        
-        Label adminLabel = new Label("ADMIN");
-        // TODO: only show label if user is admin { if (dbModel.userIsAdmin()) }
-        if (true) { 
-	        adminLabel.setStyle(filterFontNormal);
-	        signupLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-	   	        @Override
-	   	        public void handle(MouseEvent mouseEvent) {
-	   	        	// Todo
-	   	        }
-	   	    });
-        }
-        
-        topBar.add(homeLabel, 0, 0);
-        topBar.add(createEventLabel, 1, 0);
-        topBar.add(loginLabel, 2, 0);
-        topBar.add(signupLabel, 3, 0);
-        topBar.add(adminLabel, 4, 0);
+		navBar.getCreateEventLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	// TOOD
+   	        }
+   	    });
+		
     	
-        
         /* Setup click listeners for filter bar */
+		
         filterBar = new FilterBar();
         filterBar.getDateLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
@@ -258,9 +221,8 @@ public class HomePage implements BBPage {
         scrollPane.setMinSize(500, 500);
         
         borderPane = new BorderPane();
-        borderPane.setTop(topBar);
-//        topBar.prefWidthProperty().bind(borderPane.widthProperty());
-        borderPane.setLeft(filterBar.getVBox());
+        borderPane.setTop(navBar.getPane());
+        borderPane.setLeft(filterBar.getPane());
         borderPane.setCenter(scrollPane);
 	}
 	
