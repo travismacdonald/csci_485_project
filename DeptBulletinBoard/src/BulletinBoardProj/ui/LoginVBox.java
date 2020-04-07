@@ -16,6 +16,10 @@ public class LoginVBox {
 
 	private GridPane grid;
 	
+	private TextField userTextField;
+	private PasswordField passwordField;
+	private Button loginButton;
+	
 	public LoginVBox() {
 		setupView();
 	}
@@ -25,11 +29,15 @@ public class LoginVBox {
 	}
 	
 	public String getUserName() {
-		return null;
+		return userTextField.getText();
 	}
 	
 	public String getPassword() {
-		return null;
+		return passwordField.getText();
+	}
+	
+	public Button getLoginButton() {
+		return loginButton;
 	}
 	
 	private void setupView() {
@@ -46,19 +54,19 @@ public class LoginVBox {
 		Label userName = new Label("User Name:");
 		grid.add(userName, 0, 1);
 
-		TextField userTextField = new TextField();
+	    userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
 
 		Label pw = new Label("Password:");
 		grid.add(pw, 0, 2);
 
-		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 1, 2);
+		passwordField = new PasswordField();
+		grid.add(passwordField, 1, 2);
 		
-		Button btn = new Button("Login");
+		loginButton = new Button("Login");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
+		hbBtn.getChildren().add(loginButton);
 		grid.add(hbBtn, 1, 4);
 	}
 	
