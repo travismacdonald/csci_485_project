@@ -68,6 +68,4 @@ public class SignupVBox {
 		grid.add(hbBtn, 1, 4);
 	}
 	
-	
-	
 }

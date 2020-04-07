@@ -4,6 +4,7 @@ package BulletinBoardProj;
 import java.util.List;
 
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.ui.CreateEventVBox;
 import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
@@ -40,6 +41,7 @@ public class Main extends Application {
     private NavBar navBar;
     private LoginVBox loginVBox;
     private SignupVBox signupVBox;
+    private CreateEventVBox createEventVBox;
     
     private boolean filterBarIsVisible;
     private Page curPage;
@@ -164,6 +166,8 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.CREATE_EVENT;
+    	createEventVBox = new CreateEventVBox();
+    	borderPane.setCenter(createEventVBox.getPane());
     }
     
     private void navToSignupPage() {
