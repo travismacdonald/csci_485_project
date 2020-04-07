@@ -41,7 +41,7 @@ public class EventScrollItem {
     	// Event content
     	final Label title = new Label(event.getTitle());
     	final Label date = new Label("When: " + event.getDate().toString());
-    	final Label location = new Label("Where: " + event.getLocation());
+    	final Label location = new Label("Where: " + event.getLocation() + ' ' + Integer.toString(event.getRoom()));
     	final Label department = new Label("Dept: " + event.getDepartment());
     	// Todo: make fee rounded to 2 decimal places.
     	final Label fee = new Label("Fee: $" + Double.toString(event.getFee()));

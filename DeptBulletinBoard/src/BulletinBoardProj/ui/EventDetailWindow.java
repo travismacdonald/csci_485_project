@@ -1,6 +1,5 @@
 package BulletinBoardProj.ui;
 
-import BulletinBoardProj.Databases.Confirmed;
 import BulletinBoardProj.Databases.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -45,7 +44,7 @@ public class EventDetailWindow {
     	final Label title = new Label(event.getTitle());
     	final Label details = new Label("Details: " + event.getDescription());
     	final Label date = new Label("When: " + event.getDate().toString());
-    	final Label location = new Label("Where: " + event.getLocation());
+    	final Label location = new Label("Where: " + event.getLocation() + ' ' + Integer.toString(event.getRoom()));
     	final Label department = new Label("Dept: " + event.getDepartment());
     	// Todo: make fee rounded to 2 decimal places.
     	final Label fee = new Label("Fee: $" + Double.toString(event.getFee()));
