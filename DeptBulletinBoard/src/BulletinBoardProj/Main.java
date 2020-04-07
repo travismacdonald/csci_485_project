@@ -284,7 +284,8 @@ public class Main extends Application {
 		final User user = dbModel.getCurUser();
 		user.setName(userFormVBox.getUserName());
 		user.setPass(userFormVBox.getPassword());
-		// Login success
+		
+		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
 			if (dbModel.loginUser(user)) {
 				navToHomePage();
@@ -293,8 +294,15 @@ public class Main extends Application {
 				// TODO: show failed login attempt
 			}
 		}
+		
+		/* SIGNUP FORM*/
 		else if (curPage == Page.SIGNUP) {
-			// TODO: user sign up logic
+			if (dbModel.registerUser(user)) {
+				navToHomePage();
+			}
+			else {
+				// TODO: show failed signup attempt
+			}
 		}
 		
 	}
