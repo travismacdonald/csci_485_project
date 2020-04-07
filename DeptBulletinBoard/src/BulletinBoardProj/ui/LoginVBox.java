@@ -55,7 +55,7 @@ public class LoginVBox {
 		PasswordField pwBox = new PasswordField();
 		grid.add(pwBox, 1, 2);
 		
-		Button btn = new Button("Sign in");
+		Button btn = new Button("Login");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);

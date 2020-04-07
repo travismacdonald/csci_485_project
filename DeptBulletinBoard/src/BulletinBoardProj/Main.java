@@ -10,6 +10,7 @@ import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
 import BulletinBoardProj.ui.LoginVBox;
 import BulletinBoardProj.ui.NavBar;
+import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -38,6 +39,7 @@ public class Main extends Application {
     private EventScroll eventScroll;
     private NavBar navBar;
     private LoginVBox loginVBox;
+    private SignupVBox signupVBox;
     
     private boolean filterBarIsVisible;
     private Page curPage;
@@ -132,6 +134,8 @@ public class Main extends Application {
    	    });
         
     	borderPane.setTop(navBar.getPane());
+    	// TODO: delete this later; just testing for now
+    	navBar.showAdminLabel();
     	navToHomePage();
     }
     
@@ -143,9 +147,6 @@ public class Main extends Application {
     	curPage = Page.HOME;
     	onDateFilter();
     	borderPane.setCenter(eventScroll.getPane());
-    	
-    	// TODO: delete this later; just testing for now
-    	navBar.showAdminLabel();
     }
     
     private void navToAdminPage() {
@@ -171,6 +172,8 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.SIGNUP;
+    	signupVBox = new SignupVBox();
+    	borderPane.setCenter(signupVBox.getPane());
     }
     
     private void navToLoginPage() {
