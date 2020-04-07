@@ -12,11 +12,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class LoginVBox {
+public class UserFormVBox {
 
 	private GridPane grid;
 	
-	public LoginVBox() {
+	private TextField userTextField;
+	private PasswordField passwordField;
+	private Text formTitle;
+	private Button validateButton;
+	
+	private final String loginStr = "Login";
+	private final String signupStr = "Signup";
+	
+	public UserFormVBox() {
 		setupView();
 	}
 	
@@ -25,11 +33,30 @@ public class LoginVBox {
 	}
 	
 	public String getUserName() {
-		return null;
+		return userTextField.getText();
 	}
 	
 	public String getPassword() {
-		return null;
+		return passwordField.getText();
+	}
+	
+	public Button getLoginButton() {
+		return validateButton;
+	}
+	
+	public void clear() {
+		userTextField.clear();
+		passwordField.clear();
+	}
+	
+	public void setTypeAsLogin() {
+		formTitle.setText(loginStr);
+		validateButton.setText(loginStr);
+	}
+	
+	public void setTypeAsSignup() {
+		formTitle.setText(signupStr);
+		validateButton.setText(signupStr);
 	}
 	
 	private void setupView() {
@@ -39,26 +66,26 @@ public class LoginVBox {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25, 25, 25, 25));
 
-		Text scenetitle = new Text("Login");
-		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		grid.add(scenetitle, 0, 0, 2, 1);
+		formTitle = new Text();
+		formTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(formTitle, 0, 0, 2, 1);
 		
 		Label userName = new Label("User Name:");
 		grid.add(userName, 0, 1);
 
-		TextField userTextField = new TextField();
+	    userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
 
 		Label pw = new Label("Password:");
 		grid.add(pw, 0, 2);
 
-		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 1, 2);
+		passwordField = new PasswordField();
+		grid.add(passwordField, 1, 2);
 		
-		Button btn = new Button("Login");
+		validateButton = new Button();
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
+		hbBtn.getChildren().add(validateButton);
 		grid.add(hbBtn, 1, 4);
 	}
 	

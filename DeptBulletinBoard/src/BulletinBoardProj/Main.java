@@ -4,12 +4,14 @@ package BulletinBoardProj;
 import java.util.List;
 
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.Databases.Requested;
+import BulletinBoardProj.Databases.User;
 import BulletinBoardProj.ui.CreateEventVBox;
 import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
-import BulletinBoardProj.ui.LoginVBox;
+import BulletinBoardProj.ui.UserFormVBox;
 import BulletinBoardProj.ui.NavBar;
 import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
@@ -39,11 +41,12 @@ public class Main extends Application {
     private FilterBar filterBar;
     private EventScroll eventScroll;
     private NavBar navBar;
-    private LoginVBox loginVBox;
+    private UserFormVBox userFormVBox;
     private SignupVBox signupVBox;
     private CreateEventVBox createEventVBox;
     
     private boolean filterBarIsVisible;
+    private boolean isLoggedIn;
     private Page curPage;
     
     final private int minWidth = 800;
@@ -56,7 +59,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	dbModel = new DBModel();
-    	filterBarIsVisible = false;
     	this.primaryStage = primaryStage;
     	
     	setupView();
@@ -77,8 +79,13 @@ public class Main extends Application {
     
     /* Takes care of initial UI setup */
     private void navToApplicationStart() {
-    	filterBar = new FilterBar();
+    	filterBarIsVisible = false;
+    	isLoggedIn = false;
+    	
     	navBar = new NavBar();
+    	filterBar = new FilterBar();
+    	userFormVBox = new UserFormVBox();
+    	createEventVBox = new CreateEventVBox();
     	eventScroll = new EventScroll();
     	
     	/* Setup click listeners for navigation bar */
@@ -110,9 +117,21 @@ public class Main extends Application {
 		navBar.getCreateEventLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	navToCreateEventPage();
+   	        	if (!isLoggedIn) {
+   	        		navToLoginPage();
+   	        	}
+   	        	else {
+   	        	    navToCreateEventPage();
+   	        	}
    	        }
    	    });
+		navBar.getSignOutLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	signOutUser();
+   	        }
+   	    });
+		
 		
 		/* Setup click listeners for filter bar */
 		
@@ -135,9 +154,33 @@ public class Main extends Application {
    	        }
    	    });
         
-    	borderPane.setTop(navBar.getPane());
+        /* User Signup and Login Event handler */
+        
+        userFormVBox.getLoginButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onValidateAttempt();
+   	        }
+   	    });
+        
+        /* Create Event button handler*/
+        
+        createEventVBox.getCreateButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onCreateEvent();
+   	        }
+   	    });
+
+
+        borderPane.setTop(navBar.getPane());
+        
+        navBar.showLoginLabel();
+        navBar.showSignupLabel();
+        
     	// TODO: delete this later; just testing for now
-    	navBar.showAdminLabel();
+        
+//    	navBar.showAdminLabel();
     	navToHomePage();
     }
     
@@ -158,6 +201,7 @@ public class Main extends Application {
     	}
     	curPage = Page.ADMIN;
     	onDateFilter();
+    	borderPane.setCenter(eventScroll.getPane());
     }
     
     private void navToCreateEventPage() {
@@ -166,7 +210,6 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.CREATE_EVENT;
-    	createEventVBox = new CreateEventVBox();
     	borderPane.setCenter(createEventVBox.getPane());
     }
     
@@ -176,8 +219,9 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.SIGNUP;
-    	signupVBox = new SignupVBox();
-    	borderPane.setCenter(signupVBox.getPane());
+    	userFormVBox.clear();
+    	userFormVBox.setTypeAsSignup();
+    	borderPane.setCenter(userFormVBox.getPane());
     }
     
     private void navToLoginPage() {
@@ -186,8 +230,9 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.LOGIN;
-    	loginVBox = new LoginVBox();
-    	borderPane.setCenter(loginVBox.getPane());
+    	userFormVBox.clear();
+    	userFormVBox.setTypeAsLogin();
+    	borderPane.setCenter(userFormVBox.getPane());
     }    
 
 	public void onDateFilter() {
@@ -226,11 +271,13 @@ public class Main extends Application {
 	   	        @Override
 	   	        public void handle(MouseEvent mouseEvent) {
 	   	            if (curPage == Page.HOME) {
-	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	final EventDetailWindow window = new EventDetailWindow(event, false);
+	   	            	setupNormalWindow(window);
 	   	            	window.getStage().show();
 	   	            }
 	   	            else if (curPage == Page.ADMIN) {
-	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	final EventDetailWindow window = new EventDetailWindow(event, true);
+	   	            	setupAdminWindow(window);
 	   	            	window.getStage().show();
 	   	            }
 	   	        }
@@ -238,4 +285,90 @@ public class Main extends Application {
 			eventScroll.addEventItem(item);
 		}
 	}
+	
+	private void setupAdminWindow(EventDetailWindow window) {
+		window.getAcceptButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            dbModel.approveEvent(window.getEvent());
+   	            window.getStage().close();
+   	            onDateFilter(); // TODO: just remove the event from the list instead
+   	        }
+   	    });
+		window.getRejectButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            dbModel.rejectEvent(window.getEvent());
+   	            window.getStage().close();
+   	            onDateFilter(); // TODO: just remove the event from the list instead
+   	        }
+   	    });
+	}
+	
+	private void setupNormalWindow(EventDetailWindow window) {
+		// TODO
+	}
+	
+	/* Validate either login attempt or signup attempt */
+	private void onValidateAttempt() {
+		final User user = new User();
+		user.setName(userFormVBox.getUserName());
+		user.setPass(userFormVBox.getPassword());
+		
+		/* LOGIN FORM */
+		if (curPage == Page.LOGIN) {
+//			if (dbModel.loginUser(user)) {
+			if (true) {     // uncomment this line for testing, TODO: delete later
+				navBar.hideLoginLabel();
+				navBar.hideSignupLabel();
+				if (user.isAdmin()) {
+					navBar.showAdminLabel();
+				}
+				navBar.showSignOutLabel();
+		    	isLoggedIn = true;
+				navToHomePage();
+			}
+			else {
+				// TODO: show failed login attempt
+			}
+		}
+		
+		/* SIGNUP FORM*/
+		else if (curPage == Page.SIGNUP) {
+			if (dbModel.registerUser(user)) {
+				navToHomePage();
+			}
+			else {
+				// TODO: show failed signup attempt
+			}
+		}
+		
+	}
+	
+	private void onCreateEvent() {
+		Event event = new Requested();
+		event.setTitle(createEventVBox.getTitle());
+		event.setDescription(createEventVBox.getDescription());
+		event.setDepartment(createEventVBox.getDept());
+		event.setFee(createEventVBox.getFee());
+		event.setLocation(createEventVBox.getBuilding());
+		event.setRoom(createEventVBox.getRoomNo());
+		event.setDate(createEventVBox.getDate());
+		dbModel.submitEvent(event);
+		
+		navToHomePage();
+	}
+	
+	private void signOutUser() {
+		if (navBar.adminLabelIsVisible()) {
+			navBar.hideAdminLabel();
+		}
+		navBar.hideSignOutLabel();
+		navBar.showLoginLabel();
+		navBar.showSignupLabel();
+		isLoggedIn = false;
+		navToHomePage();
+	}
 }
+
+

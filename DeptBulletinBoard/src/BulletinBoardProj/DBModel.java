@@ -18,7 +18,7 @@ public class DBModel {
     private Statement stmt;
     private ResultSet rs;
     
-    private User user;
+    private User curUser;
     
     private final String host = "23.229.237.194:3306/";
     private final String dbUser = "p485"; 
@@ -36,7 +36,7 @@ public class DBModel {
     
     
     public DBModel() {
-    	user = null;
+    	curUser = new User();
     }
     
     public List<Event> getConfirmedEventsByDate() {
@@ -61,6 +61,10 @@ public class DBModel {
     
     public List<Event> getRequestedEventsByFee() {
         return getEvents(sqlRequestedByFee, false);
+    }
+    
+    public User getCurUser() {
+    	return curUser;
     }
     
     public boolean loginUser(User user) {
@@ -93,6 +97,11 @@ public class DBModel {
     	user.setAdmin(false);
     }
     
+    public boolean userIsAdmin() {
+    	// TODO: check if user is admin via db
+    	return false;
+    }
+    
     public void submitEvent(Event event) {
     	// TODO: might want to check if the date has already passed
     	//       add event to requested DB ( use addEvent )
@@ -101,6 +110,10 @@ public class DBModel {
     public void approveEvent(Event event) {
     	removeEvent(event, reqDBName);
     	addEvent(event, mainDBName);
+    }
+    
+    public void rejectEvent(Event event) {
+    	removeEvent(event, reqDBName);
     }
     
     private void addEvent(Event event, String DBName) {

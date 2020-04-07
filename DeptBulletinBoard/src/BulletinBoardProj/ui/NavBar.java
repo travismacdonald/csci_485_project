@@ -22,9 +22,18 @@ public class NavBar {
 	private Label signupLabel;
 	private Label adminLabel;
 	private Label createEventLabel;
+	private Label signOutLabel;
+	
 	private boolean adminLabelIsVisible;
+	private boolean signOutLabelIsVisible;
+	private boolean loginLabelIsVisible;
+	private boolean signupLabelIsVisible;
 	
 	public NavBar() {
+		adminLabelIsVisible = false;
+		signOutLabelIsVisible = false;
+		loginLabelIsVisible = false;
+		signupLabelIsVisible = false;
 		setupView();
 	}
 	
@@ -52,20 +61,64 @@ public class NavBar {
 		return createEventLabel;
 	}
 	
+	public Label getSignOutLabel() {
+		return signOutLabel;
+	}
+	
 	public void showAdminLabel() {
-		if (!adminLabelIsVisible()) {
-			hBox.getChildren().add(adminLabel);
-		}
+		hBox.getChildren().add(adminLabel);
+		adminLabelIsVisible = true;
 	}
 	
 	public void hideAdminLabel() {
-		if (adminLabelIsVisible()) {
-			hBox.getChildren().remove(adminLabel);
-		}
+		hBox.getChildren().remove(adminLabel);
+		adminLabelIsVisible = false;
+	}
+	
+	public void showLoginLabel() {
+		hBox.getChildren().add(loginLabel);
+		loginLabelIsVisible = true;
+	}
+	
+	public void hideLoginLabel() {
+		hBox.getChildren().remove(loginLabel);
+		loginLabelIsVisible = false;
+	}
+	
+	public void showSignOutLabel() {
+		hBox.getChildren().add(signOutLabel);
+		signOutLabelIsVisible = true;
+	}
+	
+	public void hideSignOutLabel() {
+		hBox.getChildren().remove(signOutLabel);
+		signOutLabelIsVisible = false;
+	}
+	
+	public void showSignupLabel() {
+		hBox.getChildren().add(signupLabel);
+		signupLabelIsVisible = true;
+	}
+	
+	public void hideSignupLabel() {
+		hBox.getChildren().remove(signupLabel);
+		signupLabelIsVisible = false;
 	}
 	
 	public boolean adminLabelIsVisible() {
 		return adminLabelIsVisible;
+	}
+	
+	public boolean loginLabelIsVisible() {
+		return loginLabelIsVisible;
+	}
+	
+	public boolean signupLabelIsVisible() {
+		return signupLabelIsVisible;
+	}
+	
+	public boolean signOutLabelIsVisible() {
+		return signOutLabelIsVisible;
 	}
 	
 	private void setupView() {
@@ -84,12 +137,14 @@ public class NavBar {
         
         adminLabel = new Label("ADMIN"); 
 	    adminLabel.setStyle(normalFont);
+	    
+	    signOutLabel = new Label("SIGN OUT"); 
+	    signOutLabel.setStyle(normalFont);
         
         hBox.getChildren().add(homeLabel);
         hBox.getChildren().add(createEventLabel);
-        hBox.getChildren().add(loginLabel);
-        hBox.getChildren().add(signupLabel);
-        /* doesn't add adminLabel by default - must be explicitly added */
+        
+        /* doesn't add login, signup, logout, or adminLabel by default - must be explicitly added */
 	}
 	
 }
