@@ -1,8 +1,11 @@
 package BulletinBoardProj.ui;
 
 import BulletinBoardProj.Databases.Event;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,15 +27,36 @@ public class EventDetailWindow {
     
     private Stage stage;
     private VBox vBox;
+    private Button acceptButton;
+    private Button rejectButton;
+    private Button notifyButton;
     
     
-    public EventDetailWindow(Event event) {
+    public EventDetailWindow(Event event, boolean isRequestedEvent) {
     	setupView(event);
+    	if (isRequestedEvent) {
+    		setupAcceptRejectButtons();
+    	}
+    	else {
+    		setupNotifyButton();
+    	}
     	setupStage();
     }
     
     public Stage getStage() {
     	return stage;
+    }
+    
+    public Button getNotifyButton() {
+    	return notifyButton;
+    }
+    
+    public Button getAcceptButton() {
+    	return acceptButton;
+    }
+    
+    public Button getRejectButton() {
+    	return rejectButton;
     }
 	
     private void setupView(Event event) {
@@ -64,6 +88,20 @@ public class EventDetailWindow {
     	Scene scene = new Scene(vBox, 500, 500);
     	stage.setScene(scene);
     	stage.initModality(Modality.APPLICATION_MODAL);
+    }
+    
+    private void setupNotifyButton() {
+    	// TODO:
+    }
+    
+    private void setupAcceptRejectButtons() {
+    	GridPane buttonPane = new GridPane();
+    	acceptButton = new Button("Accept");
+    	rejectButton = new Button("Reject");
+    	buttonPane.add(acceptButton, 0, 0);
+    	buttonPane.add(rejectButton, 1, 0);
+    	buttonPane.setPadding(new Insets(5));
+    	vBox.getChildren().add(buttonPane);
     }
     
 }

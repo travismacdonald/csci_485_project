@@ -227,11 +227,11 @@ public class Main extends Application {
 	   	        @Override
 	   	        public void handle(MouseEvent mouseEvent) {
 	   	            if (curPage == Page.HOME) {
-	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	final EventDetailWindow window = new EventDetailWindow(event, false);
 	   	            	window.getStage().show();
 	   	            }
 	   	            else if (curPage == Page.ADMIN) {
-	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	final EventDetailWindow window = new EventDetailWindow(event, true);
 	   	            	window.getStage().show();
 	   	            }
 	   	        }
