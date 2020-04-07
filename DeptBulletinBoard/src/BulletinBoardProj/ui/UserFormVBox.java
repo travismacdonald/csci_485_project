@@ -12,15 +12,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class LoginVBox {
+public class UserFormVBox {
 
 	private GridPane grid;
 	
 	private TextField userTextField;
 	private PasswordField passwordField;
-	private Button loginButton;
+	private Text formTitle;
+	private Button validateButton;
 	
-	public LoginVBox() {
+	private final String loginStr = "Login";
+	private final String signupStr = "Signup";
+	
+	public UserFormVBox() {
 		setupView();
 	}
 	
@@ -37,12 +41,22 @@ public class LoginVBox {
 	}
 	
 	public Button getLoginButton() {
-		return loginButton;
+		return validateButton;
 	}
 	
 	public void clear() {
 		userTextField.clear();
 		passwordField.clear();
+	}
+	
+	public void setTypeAsLogin() {
+		formTitle.setText(loginStr);
+		validateButton.setText(loginStr);
+	}
+	
+	public void setTypeAsSignup() {
+		formTitle.setText(signupStr);
+		validateButton.setText(signupStr);
 	}
 	
 	private void setupView() {
@@ -52,9 +66,9 @@ public class LoginVBox {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25, 25, 25, 25));
 
-		Text scenetitle = new Text("Login");
-		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		grid.add(scenetitle, 0, 0, 2, 1);
+		formTitle = new Text();
+		formTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(formTitle, 0, 0, 2, 1);
 		
 		Label userName = new Label("User Name:");
 		grid.add(userName, 0, 1);
@@ -68,10 +82,10 @@ public class LoginVBox {
 		passwordField = new PasswordField();
 		grid.add(passwordField, 1, 2);
 		
-		loginButton = new Button("Login");
+		validateButton = new Button();
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(loginButton);
+		hbBtn.getChildren().add(validateButton);
 		grid.add(hbBtn, 1, 4);
 	}
 	

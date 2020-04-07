@@ -36,7 +36,7 @@ public class DBModel {
     
     
     public DBModel() {
-    	curUser = null;
+    	curUser = new User();
     }
     
     public List<Event> getConfirmedEventsByDate() {

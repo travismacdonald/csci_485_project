@@ -10,13 +10,12 @@ import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
-import BulletinBoardProj.ui.LoginVBox;
+import BulletinBoardProj.ui.UserFormVBox;
 import BulletinBoardProj.ui.NavBar;
 import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -41,7 +40,7 @@ public class Main extends Application {
     private FilterBar filterBar;
     private EventScroll eventScroll;
     private NavBar navBar;
-    private LoginVBox loginVBox;
+    private UserFormVBox userFormVBox;
     private SignupVBox signupVBox;
     private CreateEventVBox createEventVBox;
     
@@ -82,7 +81,7 @@ public class Main extends Application {
     	
     	navBar = new NavBar();
     	filterBar = new FilterBar();
-    	loginVBox = new LoginVBox();
+    	userFormVBox = new UserFormVBox();
     	eventScroll = new EventScroll();
     	
     	/* Setup click listeners for navigation bar */
@@ -139,10 +138,12 @@ public class Main extends Application {
    	        }
    	    });
         
-        loginVBox.getLoginButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        /* User Signup and Login Event handler */
+        
+        userFormVBox.getLoginButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	            onLoginAttempt();
+   	            onValidateAttempt();
    	        }
    	    });
 
@@ -189,8 +190,9 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.SIGNUP;
-    	signupVBox = new SignupVBox();
-    	borderPane.setCenter(signupVBox.getPane());
+    	userFormVBox.clear();
+    	userFormVBox.setTypeAsSignup();
+    	borderPane.setCenter(userFormVBox.getPane());
     }
     
     private void navToLoginPage() {
@@ -199,8 +201,9 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.LOGIN;
-    	loginVBox = new LoginVBox();
-    	borderPane.setCenter(loginVBox.getPane());
+    	userFormVBox.clear();
+    	userFormVBox.setTypeAsLogin();
+    	borderPane.setCenter(userFormVBox.getPane());
     }    
 
 	public void onDateFilter() {
@@ -277,16 +280,21 @@ public class Main extends Application {
 		// TODO
 	}
 	
-	private void onLoginAttempt() {
+	private void onValidateAttempt() {
 		final User user = dbModel.getCurUser();
-		user.setName(loginVBox.getUserName());
-		user.setPass(loginVBox.getPassword());
+		user.setName(userFormVBox.getUserName());
+		user.setPass(userFormVBox.getPassword());
 		// Login success
-		if (dbModel.loginUser(user)) {
-			navToHomePage();
+		if (curPage == Page.LOGIN) {
+			if (dbModel.loginUser(user)) {
+				navToHomePage();
+			}
+			else {
+				// TODO: show failed login attempt
+			}
 		}
-		else {
-			// TODO: show failed login attempt
+		else if (curPage == Page.SIGNUP) {
+			// TODO: user sign up logic
 		}
 		
 	}
