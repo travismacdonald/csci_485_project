@@ -160,8 +160,13 @@ public class Main extends Application {
 
 
         borderPane.setTop(navBar.getPane());
+        
+        navBar.showLoginLabel();
+        navBar.showSignupLabel();
+        
     	// TODO: delete this later; just testing for now
-    	navBar.showAdminLabel();
+        
+//    	navBar.showAdminLabel();
     	navToHomePage();
     }
     
@@ -290,6 +295,7 @@ public class Main extends Application {
 		// TODO
 	}
 	
+	/* Validate either login attempt or signup attempt */
 	private void onValidateAttempt() {
 		final User user = dbModel.getCurUser();
 		user.setName(userFormVBox.getUserName());
@@ -298,6 +304,9 @@ public class Main extends Application {
 		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
 			if (dbModel.loginUser(user)) {
+				navBar.hideLoginLabel();
+				navBar.hideSignupLabel();
+				navBar.showSignOutLabel();
 				navToHomePage();
 			}
 			else {
