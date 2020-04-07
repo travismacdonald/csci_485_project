@@ -1,100 +1,241 @@
 package BulletinBoardProj;
 
+
+import java.util.List;
+
+import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.ui.CreateEventVBox;
+import BulletinBoardProj.ui.EventDetailWindow;
+import BulletinBoardProj.ui.EventScroll;
+import BulletinBoardProj.ui.EventScrollItem;
+import BulletinBoardProj.ui.FilterBar;
+import BulletinBoardProj.ui.LoginVBox;
+import BulletinBoardProj.ui.NavBar;
+import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+// Todo: put scroll bar back to top when events get filtered
 
 public class Main extends Application {
 
-    final Group group = new Group();
-    final ScrollPane scrollPane = new ScrollPane();
+	private enum Page {
+		HOME,
+		ADMIN,
+		CREATE_EVENT,
+		LOGIN,
+		SIGNUP
+	}
 
-    final String topBorderCss =
-            "-fx-border-color: blue;\n" +
-            "-fx-border-insets: 5;\n" +
-            "-fx-border-width: 3;\n" +
-            "-fx-border-style: dashed;\n";
-
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-
-//        BBModel bbModel = new BBModel(); // here is the model
-
-        setUpView(primaryStage);
-
-//        BorderPane borderPane = new BorderPane();
-//        HBox topBar = new HBox();
-//        topBar.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
-//        topBar.setMinHeight(100);
-//        borderPane.setLeft();
-
-//        borderPane.setTop(topBar);
-
-/*
-        VBox vBox = new VBox();
-        Label tl = new Label("Filters/Sortings go here.");
-        vBox.getChildren().add(tl);
-        vBox.setBackground(new Background(new BackgroundFill(Color.BLUE, null, null)));
-        vBox.prefHeightProperty().bind(primaryStage.heightProperty().multiply(1));
-
-        HBox hBox = new HBox();
-        Label hBoxLabel = new Label("Other features go here");
-        hBox.getChildren().add(hBoxLabel);
-        hBox.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
-//        hBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.9));
-        hBox.setMinWidth(500);
-        hBox.setLayoutX(140);
-        hBox.setMinHeight(80);
-
-        group.getChildren().add(vBox);
-        group.getChildren().add(hBox);
-        Scene scene = new Scene(group, 500, 500);
-*/
-//        Scene scene = new Scene(borderPane, 500, 500);
-//        // Setup stage
-//        primaryStage.setMinHeight(400);
-//        primaryStage.setMinWidth(500);
-//        primaryStage.initStyle(StageStyle.DECORATED);
-//        primaryStage.setTitle("CSCI 485");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-
-
-    }
-
-    private void setUpView(Stage primaryStage) {
-        // Setup Border Pane
-        BorderPane borderPane = new BorderPane();
-        HBox topBar = new HBox();
-        topBar.setStyle(topBorderCss);
-//        topBar.setBackground(new Background(new BackgroundFill(Color.CRIMSON, null, null)));
-        topBar.setMinHeight(100);
-
-
-        borderPane.setTop(topBar);
-
-        Scene scene = new Scene(borderPane, 500, 500);
-        // Setup stage
-        primaryStage.setMinHeight(400);
-        primaryStage.setMinWidth(500);
-        primaryStage.initStyle(StageStyle.DECORATED);
-        primaryStage.setTitle("CSCI 485");
-        primaryStage.setScene(scene);
-
-        primaryStage.setMaximized(true);
-
-        primaryStage.show();
-    }
-
-
+    private DBModel dbModel;
+    private Stage primaryStage;
+    private BorderPane borderPane;
+    
+    private FilterBar filterBar;
+    private EventScroll eventScroll;
+    private NavBar navBar;
+    private LoginVBox loginVBox;
+    private SignupVBox signupVBox;
+    private CreateEventVBox createEventVBox;
+    
+    private boolean filterBarIsVisible;
+    private Page curPage;
+    
+    final private int minWidth = 800;
+    final private int minHeight = 600;
+    
     public static void main(String[] args) {
         launch(args);
     }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+    	dbModel = new DBModel();
+    	filterBarIsVisible = false;
+    	this.primaryStage = primaryStage;
+    	
+    	setupView();
+        navToApplicationStart();
+    }
+    
+    private void setupView() {
+    	primaryStage.setMinHeight(minHeight);
+        primaryStage.setMinWidth(minWidth);
+        primaryStage.initStyle(StageStyle.DECORATED);
+    	primaryStage.setMaximized(true);
+        primaryStage.setTitle("CSCI 485");
+        
+        borderPane = new BorderPane();
+        primaryStage.setScene(new Scene(borderPane));
+        primaryStage.show();
+    }
+    
+    /* Takes care of initial UI setup */
+    private void navToApplicationStart() {
+    	filterBar = new FilterBar();
+    	navBar = new NavBar();
+    	eventScroll = new EventScroll();
+    	
+    	/* Setup click listeners for navigation bar */
+    	
+    	navBar.getHomeLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToHomePage();
+   	        }
+   	    });
+		navBar.getLoginLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToLoginPage();
+   	        }
+   	    });
+		navBar.getSignupLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToSignupPage();
+   	        }
+   	    });
+		navBar.getAdminLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToAdminPage();
+   	        }
+   	    });
+		navBar.getCreateEventLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToCreateEventPage();
+   	        }
+   	    });
+		
+		/* Setup click listeners for filter bar */
+		
+        filterBar.getDateLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onDateFilter();
+   	        }
+   	    });
+        filterBar.getDeptLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onDeptFilter();
+   	        }
+   	    });
+        filterBar.getFeeLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onFeeFilter();
+   	        }
+   	    });
+        
+    	borderPane.setTop(navBar.getPane());
+    	// TODO: delete this later; just testing for now
+    	navBar.showAdminLabel();
+    	navToHomePage();
+    }
+    
+    private void navToHomePage() {
+    	if (!filterBarIsVisible) {
+    	    borderPane.setLeft(filterBar.getPane());
+    	    filterBarIsVisible = true;
+    	}
+    	curPage = Page.HOME;
+    	onDateFilter();
+    	borderPane.setCenter(eventScroll.getPane());
+    }
+    
+    private void navToAdminPage() {
+    	if (!filterBarIsVisible) {
+    	    borderPane.setLeft(filterBar.getPane());
+    	    filterBarIsVisible = true;
+    	}
+    	curPage = Page.ADMIN;
+    	onDateFilter();
+    }
+    
+    private void navToCreateEventPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
+    	curPage = Page.CREATE_EVENT;
+    	createEventVBox = new CreateEventVBox();
+    	borderPane.setCenter(createEventVBox.getPane());
+    }
+    
+    private void navToSignupPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
+    	curPage = Page.SIGNUP;
+    	signupVBox = new SignupVBox();
+    	borderPane.setCenter(signupVBox.getPane());
+    }
+    
+    private void navToLoginPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
+    	curPage = Page.LOGIN;
+    	loginVBox = new LoginVBox();
+    	borderPane.setCenter(loginVBox.getPane());
+    }    
+
+	public void onDateFilter() {
+		if (curPage == Page.HOME) {
+			showAllEvents(dbModel.getConfirmedEventsByDate());
+		}
+		else if (curPage == Page.ADMIN) {
+			showAllEvents(dbModel.getRequestedEventsByDate());
+		}
+	}
+
+	public void onFeeFilter() {
+		if (curPage == Page.HOME) {
+			showAllEvents(dbModel.getConfirmedEventsByFee());
+		}
+		else if (curPage == Page.ADMIN) {
+			showAllEvents(dbModel.getRequestedEventsByFee());
+		}
+		
+	}
+
+	public void onDeptFilter() {
+		if (curPage == Page.HOME) {
+			showAllEvents(dbModel.getConfirmedEventsByDept());
+		}
+		else if (curPage == Page.ADMIN) {
+			showAllEvents(dbModel.getRequestedEventsByDept());
+		}
+	}
+	
+	private void showAllEvents(List<Event> eventList) {
+		eventScroll.clear();
+		for (Event event : eventList) {
+			final EventScrollItem item = new EventScrollItem(event);
+			item.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+	   	        @Override
+	   	        public void handle(MouseEvent mouseEvent) {
+	   	            if (curPage == Page.HOME) {
+	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	window.getStage().show();
+	   	            }
+	   	            else if (curPage == Page.ADMIN) {
+	   	            	final EventDetailWindow window = new EventDetailWindow(event);
+	   	            	window.getStage().show();
+	   	            }
+	   	        }
+	   	    });
+			eventScroll.addEventItem(item);
+		}
+	}
 }

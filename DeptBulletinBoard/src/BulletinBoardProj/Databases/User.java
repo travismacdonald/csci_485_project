@@ -1,14 +1,15 @@
 package BulletinBoardProj.Databases;
 
-public class Users extends Database485 {
+public class User extends Database485 {
+	
 	private String name, pass;
 	private boolean admin;
 	
-	public Users() {
+	public User() {
 		super();
 	}
 	
-	Users(String name, String pass, boolean admin) {
+	User(String name, String pass, boolean admin) {
 		//super(name, pass, admin);
 	}
 
