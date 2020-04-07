@@ -4,6 +4,7 @@ package BulletinBoardProj;
 import java.util.List;
 
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.Databases.Requested;
 import BulletinBoardProj.Databases.User;
 import BulletinBoardProj.ui.CreateEventVBox;
 import BulletinBoardProj.ui.EventDetailWindow;
@@ -82,6 +83,7 @@ public class Main extends Application {
     	navBar = new NavBar();
     	filterBar = new FilterBar();
     	userFormVBox = new UserFormVBox();
+    	createEventVBox = new CreateEventVBox();
     	eventScroll = new EventScroll();
     	
     	/* Setup click listeners for navigation bar */
@@ -146,6 +148,15 @@ public class Main extends Application {
    	            onValidateAttempt();
    	        }
    	    });
+        
+        /* Create Event button handler*/
+        
+        createEventVBox.getCreateButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onCreateEvent();
+   	        }
+   	    });
 
 
         borderPane.setTop(navBar.getPane());
@@ -180,7 +191,6 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.CREATE_EVENT;
-    	createEventVBox = new CreateEventVBox();
     	borderPane.setCenter(createEventVBox.getPane());
     }
     
@@ -305,6 +315,20 @@ public class Main extends Application {
 			}
 		}
 		
+	}
+	
+	private void onCreateEvent() {
+		Event event = new Requested();
+		event.setTitle(createEventVBox.getTitle());
+		event.setDescription(createEventVBox.getDescription());
+		event.setDepartment(createEventVBox.getDept());
+		event.setFee(createEventVBox.getFee());
+		event.setLocation(createEventVBox.getBuilding());
+		event.setRoom(createEventVBox.getRoomNo());
+		event.setDate(createEventVBox.getDate());
+		dbModel.submitEvent(event);
+		
+		navToHomePage();
 	}
 }
 

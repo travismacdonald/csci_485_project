@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,6 +26,7 @@ public class CreateEventVBox {
 	private TextField roomNoTf;
 	private TextField deptTf;
 	private TextField feeTf;
+	Button btn;
 	
 	public CreateEventVBox() {
 		setupView();
@@ -64,6 +64,10 @@ public class CreateEventVBox {
 		return Integer.valueOf(roomNoTf.getText());
 	}
 	
+	public Button getCreateButton() {
+		return btn;
+	}
+	
 	private void setupView() {
 		grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
@@ -77,45 +81,45 @@ public class CreateEventVBox {
 		
 		Label title = new Label("Title:");
 		grid.add(title, 0, 1);
-		TextField titleTextField = new TextField();
-		grid.add(titleTextField, 1, 1);
+		titleTf = new TextField();
+		grid.add(titleTf, 1, 1);
 		
 		Label description = new Label("Description:");
 		grid.add(description, 0, 2);
-		TextField descriptionTextField = new TextField();
-		grid.add(descriptionTextField, 1, 2);
+		descriptionTf = new TextField();
+		grid.add(descriptionTf, 1, 2);
 
 		// TODO: fix regex entry
 		Label date = new Label("Date:");
 		grid.add(date, 0, 3);
-		DatePicker datePicker = new DatePicker();
+		datePicker = new DatePicker();
 		grid.add(datePicker, 1, 3);
 		
 		Label building = new Label("Building:");
 		grid.add(building, 0, 4);
-		TextField buildingTextField = new TextField();
-		grid.add(buildingTextField, 1, 4);
+		buildingTf = new TextField();
+		grid.add(buildingTf, 1, 4);
 		
 		// TODO: fix entry regex
 		Label roomNumber = new Label("Room number:");
 		grid.add(roomNumber, 0, 5);
-		TextField roomNumberTextField = new TextField();
-		grid.add(roomNumberTextField, 1, 5);
-		acceptOnlyNumericInput(roomNumberTextField);
+		roomNoTf = new TextField();
+		grid.add(roomNoTf, 1, 5);
+		acceptOnlyNumericInput(roomNoTf);
 		
 		Label department = new Label("Department:");
 		grid.add(department, 0, 6);
-		TextField departmentTextField = new TextField();
-		grid.add(departmentTextField, 1, 6);
+		deptTf = new TextField();
+		grid.add(deptTf, 1, 6);
 		
 		// TODO: fix entry regex
 		Label fee = new Label("Entry Fee:");
 		grid.add(fee, 0, 7);
-		TextField feeTextField = new TextField();
-		grid.add(feeTextField, 1, 7);
+		feeTf = new TextField();
+		grid.add(feeTf, 1, 7);
 //		acceptOnlyDecimalNumericInput(feeTextField);
 		
-		Button btn = new Button("Submit Event");
+		btn = new Button("Submit Event");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);
