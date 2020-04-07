@@ -8,6 +8,7 @@ import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
 import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
+import BulletinBoardProj.ui.LoginVBox;
 import BulletinBoardProj.ui.NavBar;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -36,6 +37,7 @@ public class Main extends Application {
     private FilterBar filterBar;
     private EventScroll eventScroll;
     private NavBar navBar;
+    private LoginVBox loginVBox;
     
     private boolean filterBarIsVisible;
     private Page curPage;
@@ -74,7 +76,6 @@ public class Main extends Application {
     	filterBar = new FilterBar();
     	navBar = new NavBar();
     	eventScroll = new EventScroll();
-    	// TODO: Login stuff
     	
     	/* Setup click listeners for navigation bar */
     	
@@ -178,6 +179,8 @@ public class Main extends Application {
     		filterBarIsVisible = false;
     	}
     	curPage = Page.LOGIN;
+    	loginVBox = new LoginVBox();
+    	borderPane.setCenter(loginVBox.getPane());
     }    
 
 	public void onDateFilter() {
