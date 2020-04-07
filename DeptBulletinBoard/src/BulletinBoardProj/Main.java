@@ -118,6 +118,13 @@ public class Main extends Application {
    	        	navToCreateEventPage();
    	        }
    	    });
+		navBar.getSignOutLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	signOutUser();
+   	        }
+   	    });
+		
 		
 		/* Setup click listeners for filter bar */
 		
@@ -304,6 +311,7 @@ public class Main extends Application {
 		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
 			if (dbModel.loginUser(user)) {
+//			if (true) {     // use this line for testing right now 
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
 				if (user.isAdmin()) {
@@ -340,6 +348,16 @@ public class Main extends Application {
 		event.setDate(createEventVBox.getDate());
 		dbModel.submitEvent(event);
 		
+		navToHomePage();
+	}
+	
+	private void signOutUser() {
+		if (navBar.adminLabelIsVisible()) {
+			navBar.hideAdminLabel();
+		}
+		navBar.hideSignOutLabel();
+		navBar.showLoginLabel();
+		navBar.showSignupLabel();
 		navToHomePage();
 	}
 }
