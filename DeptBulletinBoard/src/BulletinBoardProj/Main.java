@@ -297,7 +297,7 @@ public class Main extends Application {
 	
 	/* Validate either login attempt or signup attempt */
 	private void onValidateAttempt() {
-		final User user = dbModel.getCurUser();
+		final User user = new User();
 		user.setName(userFormVBox.getUserName());
 		user.setPass(userFormVBox.getPassword());
 		
@@ -306,6 +306,9 @@ public class Main extends Application {
 			if (dbModel.loginUser(user)) {
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
+				if (user.isAdmin()) {
+					navBar.showAdminLabel();
+				}
 				navBar.showSignOutLabel();
 				navToHomePage();
 			}

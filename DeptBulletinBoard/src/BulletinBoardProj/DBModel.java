@@ -97,6 +97,11 @@ public class DBModel {
     	user.setAdmin(false);
     }
     
+    public boolean userIsAdmin() {
+    	// TODO: check if user is admin via db
+    	return false;
+    }
+    
     public void submitEvent(Event event) {
     	// TODO: might want to check if the date has already passed
     	//       add event to requested DB ( use addEvent )
