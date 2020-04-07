@@ -15,6 +15,7 @@ import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -228,10 +229,12 @@ public class Main extends Application {
 	   	        public void handle(MouseEvent mouseEvent) {
 	   	            if (curPage == Page.HOME) {
 	   	            	final EventDetailWindow window = new EventDetailWindow(event, false);
+	   	            	setupNormalWindow(window);
 	   	            	window.getStage().show();
 	   	            }
 	   	            else if (curPage == Page.ADMIN) {
 	   	            	final EventDetailWindow window = new EventDetailWindow(event, true);
+	   	            	setupAdminWindow(window);
 	   	            	window.getStage().show();
 	   	            }
 	   	        }
@@ -239,4 +242,29 @@ public class Main extends Application {
 			eventScroll.addEventItem(item);
 		}
 	}
+	
+	private void setupAdminWindow(EventDetailWindow window) {
+		window.getAcceptButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            dbModel.approveEvent(window.getEvent());
+   	            window.getStage().close();
+   	            onDateFilter(); // TODO: just remove the event from the list instead
+   	        }
+   	    });
+		window.getRejectButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            dbModel.rejectEvent(window.getEvent());
+   	            window.getStage().close();
+   	            onDateFilter(); // TODO: just remove the event from the list instead
+   	        }
+   	    });
+	}
+	
+	private void setupNormalWindow(EventDetailWindow window) {
+		// TODO
+	}
 }
+
+

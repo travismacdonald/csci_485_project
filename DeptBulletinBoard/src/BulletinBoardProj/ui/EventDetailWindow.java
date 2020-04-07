@@ -30,10 +30,12 @@ public class EventDetailWindow {
     private Button acceptButton;
     private Button rejectButton;
     private Button notifyButton;
+    private Event event;
     
     
     public EventDetailWindow(Event event, boolean isRequestedEvent) {
-    	setupView(event);
+    	this.event = event;
+    	setupView();
     	if (isRequestedEvent) {
     		setupAcceptRejectButtons();
     	}
@@ -58,10 +60,13 @@ public class EventDetailWindow {
     public Button getRejectButton() {
     	return rejectButton;
     }
+    
+    public Event getEvent() {
+    	return event;
+    }
 	
-    private void setupView(Event event) {
+    private void setupView() {
     	vBox = new VBox();
-    	vBox.setUserData(event);
     	vBox.setMinWidth(400);  // TODO: check if this can go in CSS string
     	
     	// Event content

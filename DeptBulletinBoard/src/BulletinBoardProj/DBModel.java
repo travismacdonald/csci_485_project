@@ -103,6 +103,10 @@ public class DBModel {
     	addEvent(event, mainDBName);
     }
     
+    public void rejectEvent(Event event) {
+    	removeEvent(event, reqDBName);
+    }
+    
     private void addEvent(Event event, String DBName) {
     	// TODO: add event to db - DBName will be for confirmed / requested
     }
