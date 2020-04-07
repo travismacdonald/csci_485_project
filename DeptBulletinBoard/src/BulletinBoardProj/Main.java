@@ -46,6 +46,7 @@ public class Main extends Application {
     private CreateEventVBox createEventVBox;
     
     private boolean filterBarIsVisible;
+    private boolean isLoggedIn;
     private Page curPage;
     
     final private int minWidth = 800;
@@ -79,6 +80,7 @@ public class Main extends Application {
     /* Takes care of initial UI setup */
     private void navToApplicationStart() {
     	filterBarIsVisible = false;
+    	isLoggedIn = false;
     	
     	navBar = new NavBar();
     	filterBar = new FilterBar();
@@ -115,7 +117,12 @@ public class Main extends Application {
 		navBar.getCreateEventLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	navToCreateEventPage();
+   	        	if (!isLoggedIn) {
+   	        		navToLoginPage();
+   	        	}
+   	        	else {
+   	        	    navToCreateEventPage();
+   	        	}
    	        }
    	    });
 		navBar.getSignOutLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -310,14 +317,15 @@ public class Main extends Application {
 		
 		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
-			if (dbModel.loginUser(user)) {
-//			if (true) {     // use this line for testing right now 
+//			if (dbModel.loginUser(user)) {
+			if (true) {     // uncomment this line for testing, TODO: delete later
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
 				if (user.isAdmin()) {
 					navBar.showAdminLabel();
 				}
 				navBar.showSignOutLabel();
+		    	isLoggedIn = true;
 				navToHomePage();
 			}
 			else {
@@ -358,6 +366,7 @@ public class Main extends Application {
 		navBar.hideSignOutLabel();
 		navBar.showLoginLabel();
 		navBar.showSignupLabel();
+		isLoggedIn = false;
 		navToHomePage();
 	}
 }
