@@ -158,6 +158,7 @@ public class Main extends Application {
     	}
     	curPage = Page.ADMIN;
     	onDateFilter();
+    	borderPane.setCenter(eventScroll.getPane());
     }
     
     private void navToCreateEventPage() {
