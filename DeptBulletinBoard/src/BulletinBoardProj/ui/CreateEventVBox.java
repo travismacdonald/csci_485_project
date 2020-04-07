@@ -1,5 +1,7 @@
 package BulletinBoardProj.ui;
 
+import java.sql.Date;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -18,6 +20,13 @@ import javafx.scene.text.Text;
 public class CreateEventVBox {
 
 	private GridPane grid;
+	private TextField titleTf;
+	private TextField descriptionTf;
+	private DatePicker datePicker;
+	private TextField buildingTf;
+	private TextField roomNoTf;
+	private TextField deptTf;
+	private TextField feeTf;
 	
 	public CreateEventVBox() {
 		setupView();
@@ -27,12 +36,32 @@ public class CreateEventVBox {
 		return grid;
 	}
 	
-	public String getUserName() {
-		return null;
+	public String getTitle() {
+		return titleTf.getText();
 	}
 	
-	public String getPassword() {
-		return null;
+	public String getDescription() {
+		return descriptionTf.getText();
+	}
+	
+	public Date getDate() {
+		return Date.valueOf(datePicker.valueProperty().get());
+	}
+	
+	public String getBuilding() {
+		return buildingTf.getText();
+	}
+	
+	public String getDept() {
+		return deptTf.getText();
+	}
+	
+	public Double getFee() {
+		return Double.valueOf(feeTf.getText());
+	}
+	
+	public int getRoomNo() {
+		return Integer.valueOf(roomNoTf.getText());
 	}
 	
 	private void setupView() {
