@@ -40,6 +40,11 @@ public class LoginVBox {
 		return loginButton;
 	}
 	
+	public void clear() {
+		userTextField.clear();
+		passwordField.clear();
+	}
+	
 	private void setupView() {
 		grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);

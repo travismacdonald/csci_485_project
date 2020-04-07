@@ -18,7 +18,7 @@ public class DBModel {
     private Statement stmt;
     private ResultSet rs;
     
-    private User user;
+    private User curUser;
     
     private final String host = "23.229.237.194:3306/";
     private final String dbUser = "p485"; 
@@ -36,7 +36,7 @@ public class DBModel {
     
     
     public DBModel() {
-    	user = null;
+    	curUser = null;
     }
     
     public List<Event> getConfirmedEventsByDate() {
@@ -61,6 +61,10 @@ public class DBModel {
     
     public List<Event> getRequestedEventsByFee() {
         return getEvents(sqlRequestedByFee, false);
+    }
+    
+    public User getCurUser() {
+    	return curUser;
     }
     
     public boolean loginUser(User user) {

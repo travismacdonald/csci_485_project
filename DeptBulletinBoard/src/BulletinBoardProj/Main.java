@@ -4,6 +4,7 @@ package BulletinBoardProj;
 import java.util.List;
 
 import BulletinBoardProj.Databases.Event;
+import BulletinBoardProj.Databases.User;
 import BulletinBoardProj.ui.CreateEventVBox;
 import BulletinBoardProj.ui.EventDetailWindow;
 import BulletinBoardProj.ui.EventScroll;
@@ -57,7 +58,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	dbModel = new DBModel();
-    	filterBarIsVisible = false;
     	this.primaryStage = primaryStage;
     	
     	setupView();
@@ -78,8 +78,11 @@ public class Main extends Application {
     
     /* Takes care of initial UI setup */
     private void navToApplicationStart() {
-    	filterBar = new FilterBar();
+    	filterBarIsVisible = false;
+    	
     	navBar = new NavBar();
+    	filterBar = new FilterBar();
+    	loginVBox = new LoginVBox();
     	eventScroll = new EventScroll();
     	
     	/* Setup click listeners for navigation bar */
@@ -136,7 +139,15 @@ public class Main extends Application {
    	        }
    	    });
         
-    	borderPane.setTop(navBar.getPane());
+        loginVBox.getLoginButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	            onLoginAttempt();
+   	        }
+   	    });
+
+
+        borderPane.setTop(navBar.getPane());
     	// TODO: delete this later; just testing for now
     	navBar.showAdminLabel();
     	navToHomePage();
@@ -264,6 +275,20 @@ public class Main extends Application {
 	
 	private void setupNormalWindow(EventDetailWindow window) {
 		// TODO
+	}
+	
+	private void onLoginAttempt() {
+		final User user = dbModel.getCurUser();
+		user.setName(loginVBox.getUserName());
+		user.setPass(loginVBox.getPassword());
+		// Login success
+		if (dbModel.loginUser(user)) {
+			navToHomePage();
+		}
+		else {
+			// TODO: show failed login attempt
+		}
+		
 	}
 }
 
