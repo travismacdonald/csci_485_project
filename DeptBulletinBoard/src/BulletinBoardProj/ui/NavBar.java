@@ -20,17 +20,20 @@ public class NavBar {
 	private Label homeLabel;
 	private Label loginLabel;
 	private Label signupLabel;
-	private Label adminLabel;
+	private Label requestedLabel;
+	private Label adminStatusLabel;
 	private Label createEventLabel;
 	private Label signOutLabel;
 	
-	private boolean adminLabelIsVisible;
+	private boolean requestedLabelIsVisible;
+	private boolean adminStatusLabelIsVisible;
 	private boolean signOutLabelIsVisible;
 	private boolean loginLabelIsVisible;
 	private boolean signupLabelIsVisible;
 	
 	public NavBar() {
-		adminLabelIsVisible = false;
+		requestedLabelIsVisible = false;
+		adminStatusLabelIsVisible = false;
 		signOutLabelIsVisible = false;
 		loginLabelIsVisible = false;
 		signupLabelIsVisible = false;
@@ -53,8 +56,12 @@ public class NavBar {
 		return signupLabel;
 	}
 	
-	public Label getAdminLabel() {
-		return adminLabel;
+	public Label getRequestedLabel() {
+		return requestedLabel;
+	}
+	
+	public Label getAdminStatusLabel() {
+		return adminStatusLabel;
 	}
 	
 	public Label getCreateEventLabel() {
@@ -65,14 +72,24 @@ public class NavBar {
 		return signOutLabel;
 	}
 	
-	public void showAdminLabel() {
-		hBox.getChildren().add(adminLabel);
-		adminLabelIsVisible = true;
+	public void showRequestedLabel() {
+		hBox.getChildren().add(requestedLabel);
+		requestedLabelIsVisible = true;
 	}
 	
-	public void hideAdminLabel() {
-		hBox.getChildren().remove(adminLabel);
-		adminLabelIsVisible = false;
+	public void hideRequestedLabel() {
+		hBox.getChildren().remove(requestedLabel);
+		requestedLabelIsVisible = false;
+	}
+	
+	public void showAdminStatusLabel() {
+		hBox.getChildren().add(adminStatusLabel);
+		adminStatusLabelIsVisible = true;
+	}
+	
+	public void hideAdminStatusLabel() {
+		hBox.getChildren().remove(adminStatusLabel);
+		adminStatusLabelIsVisible = false;
 	}
 	
 	public void showLoginLabel() {
@@ -106,7 +123,7 @@ public class NavBar {
 	}
 	
 	public boolean adminLabelIsVisible() {
-		return adminLabelIsVisible;
+		return requestedLabelIsVisible;
 	}
 	
 	public boolean loginLabelIsVisible() {
@@ -135,8 +152,10 @@ public class NavBar {
         signupLabel = new Label("SIGNUP");
         signupLabel.setStyle(normalFont);
         
-        adminLabel = new Label("ADMIN"); 
-	    adminLabel.setStyle(normalFont);
+        requestedLabel = new Label("REQUESTED"); 
+	    requestedLabel.setStyle(normalFont);
+	    adminStatusLabel = new Label("ADMIN"); 
+	    adminStatusLabel.setStyle(normalFont);
 	    
 	    signOutLabel = new Label("SIGN OUT"); 
 	    signOutLabel.setStyle(normalFont);
