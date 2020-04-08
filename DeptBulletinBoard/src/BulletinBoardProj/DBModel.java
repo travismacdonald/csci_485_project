@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,10 @@ public class DBModel {
     public void submitEvent(Event event) {
     	// TODO: might want to check if the date has already passed
     	//       add event to requested DB ( use addEvent )
+    	if(!(event.getDate().toLocalDate().isBefore(LocalDate.now())))
+    		updateEvent(event, reqDBName, "add");
+    	else
+    		System.out.println("Date of event has already passed");
     }
     
     public void approveEvent(Event event) {
@@ -116,11 +121,11 @@ public class DBModel {
     	removeEvent(event, reqDBName);
     }
     
-    private void addEvent(Event event, String DBName) {
+    private void addEvent(Event event, String dbName) {
     	// TODO: add event to db - DBName will be for confirmed / requested
     }
     
-    private void removeEvent(Event event, String DBName) {
+    private void removeEvent(Event event, String dbName) {
     	// TODO: remove event from db - DBName will be for confirmed / requested
     }
     
@@ -133,6 +138,35 @@ public class DBModel {
     private boolean isValidUser(User user) {
     	// TODO: return true if credentials are valid (name exists in DB and password is correct)
     	return false;
+    }
+    
+    private void updateEvent(Event event, String dbName, String addOrRemove) {
+    	// TODO: add event to db - DBName will be for confirmed / requested
+    	final String name;
+    	if (dbName.equals(reqDBName)) {
+    		name = "Requested";
+    	}
+    	else {
+    		name = "Confirmed";
+    	}
+    	String sql1 = "INSERT INTO " + name;
+    	String sql2 = " VALUES ('"+event.getId()+"','"+event.getTitle()+"','"+event.getDate()+"','"+event.getDescription()+"','"+event.getLocation()+"',"+event.getRoom()+",'"+event.getDepartment()+"',"+event.getFee()+")";
+    	String sql3 = "DELETE FROM " + name + " WHERE ID = " +event.getId();
+    	try {
+	    	con = DriverManager.getConnection("jdbc:mysql://" + host + dbName, dbUser, pass);
+	        stmt = con.createStatement();
+	        if(addOrRemove.equals("add")) {
+	        	stmt.executeUpdate(sql1+sql2);
+	        }
+	        if(addOrRemove.equals("remove")) {
+	        	stmt.executeUpdate(sql3);
+	        }
+	        con.close();
+	    	
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     

@@ -321,7 +321,8 @@ public class Main extends Application {
 			if (true) {     // uncomment this line for testing, TODO: delete later
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
-				if (user.isAdmin()) {
+//				if (user.isAdmin()) {
+				if (true) {
 					navBar.showAdminLabel();
 				}
 				navBar.showSignOutLabel();
