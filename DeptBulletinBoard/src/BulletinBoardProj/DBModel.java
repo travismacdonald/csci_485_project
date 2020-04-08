@@ -77,6 +77,7 @@ public class DBModel {
     public boolean loginUser(User user) {
     	if (isValidUser(user)) {
     		// todo: set admin status
+    		user.setAdmin(this.isUserAdmin(user));
     		return true;
     	}
     	else {
@@ -159,9 +160,9 @@ public class DBModel {
     private void addUser(User user) {
     	final String queryStr = 
     			"INSERT INTO " + userTableName + " VALUES ('" 
-    			+ user.getName() + "','" 
-    			+ user.getPass() + "','" 
-    			+ "0" + "')'"; // 0 == not admin
+    			+ user.getName() + "', '" 
+    			+ user.getPass() + "', " 
+    			+ "0" + ")"; // 0 == not admin
     	executeDBUpdate(userDBName, queryStr);
     }
     
@@ -216,7 +217,7 @@ public class DBModel {
     
     private boolean userNameIsInDatabase(String username) {
     	final String query = 
-    			"SELECT * FROM User " + 
+    			"SELECT * FROM Users " + 
     	        "WHERE NAME = '" + username + "' ";
     	try {
     		con = DriverManager.getConnection("jdbc:mysql://" + host + userDBName, dbUser, pass);
@@ -236,7 +237,7 @@ public class DBModel {
     
     private boolean isValidUser(User user) {
     	final String query = 
-    			"SELECT * FROM User " + 
+    			"SELECT * FROM Users " + 
     	        "WHERE NAME = '" + user.getName() + "' " +
     			"AND PASS = '" + user.getPass() + "'";
     	try {
@@ -257,9 +258,9 @@ public class DBModel {
     
     private boolean isUserAdmin(User user) {
     	final String query = 
-    			"SELECT ISADMIN FROM User " + 
+    			"SELECT * FROM Users " + 
     	        "WHERE NAME = '" + user.getName() + "' " +
-    	        "AND ISADMIN = 1";
+    	        "AND ADMIN = 1";
     	try {
     		con = DriverManager.getConnection("jdbc:mysql://" + host + userDBName, dbUser, pass);
     		stmt = con.createStatement();

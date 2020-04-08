@@ -317,12 +317,10 @@ public class Main extends Application {
 		
 		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
-//			if (dbModel.loginUser(user)) {
-			if (true) {                          // uncomment this line for testing, TODO: delete later
+			if (dbModel.loginUser(user)) {
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
-//				if (user.isAdmin()) {            // uncomment this line for testing, TODO: delete later
-				if (true) {
+				if (user.isAdmin()) {
 					navBar.showAdminLabel();
 				}
 				navBar.showSignOutLabel();
@@ -337,6 +335,11 @@ public class Main extends Application {
 		/* SIGNUP FORM*/
 		else if (curPage == Page.SIGNUP) {
 			if (dbModel.registerUser(user)) {
+				dbModel.loginUser(user);
+				navBar.hideLoginLabel();
+				navBar.hideSignupLabel();
+				navBar.showSignOutLabel();
+		    	isLoggedIn = true;
 				navToHomePage();
 			}
 			else {
