@@ -13,7 +13,6 @@ import BulletinBoardProj.ui.EventScrollItem;
 import BulletinBoardProj.ui.FilterBar;
 import BulletinBoardProj.ui.UserFormVBox;
 import BulletinBoardProj.ui.NavBar;
-import BulletinBoardProj.ui.SignupVBox;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -22,16 +21,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-// Todo: put scroll bar back to top when events get filtered
-
 public class Main extends Application {
 
 	private enum Page {
 		HOME,
-		ADMIN,
+		REQUESTED,
 		CREATE_EVENT,
 		LOGIN,
-		SIGNUP
+		SIGNUP,
+		ADMIN_STATUS;
 	}
 
     private DBModel dbModel;
@@ -42,7 +40,6 @@ public class Main extends Application {
     private EventScroll eventScroll;
     private NavBar navBar;
     private UserFormVBox userFormVBox;
-    private SignupVBox signupVBox;
     private CreateEventVBox createEventVBox;
     
     private boolean filterBarIsVisible;
@@ -108,10 +105,10 @@ public class Main extends Application {
    	        	navToSignupPage();
    	        }
    	    });
-		navBar.getAdminLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		navBar.getRequestedLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
-   	        	navToAdminPage();
+   	        	navToRequestedPage();
    	        }
    	    });
 		navBar.getCreateEventLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -129,6 +126,12 @@ public class Main extends Application {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
    	        	signOutUser();
+   	        }
+   	    });
+		navBar.getAdminStatusLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+   	        @Override
+   	        public void handle(MouseEvent mouseEvent) {
+   	        	navToAdminStatusPage();
    	        }
    	    });
 		
@@ -156,7 +159,7 @@ public class Main extends Application {
         
         /* User Signup and Login Event handler */
         
-        userFormVBox.getLoginButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        userFormVBox.getValidateButton().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
    	        @Override
    	        public void handle(MouseEvent mouseEvent) {
    	            onValidateAttempt();
@@ -178,9 +181,6 @@ public class Main extends Application {
         navBar.showLoginLabel();
         navBar.showSignupLabel();
         
-    	// TODO: delete this later; just testing for now
-        
-//    	navBar.showAdminLabel();
     	navToHomePage();
     }
     
@@ -194,12 +194,12 @@ public class Main extends Application {
     	borderPane.setCenter(eventScroll.getPane());
     }
     
-    private void navToAdminPage() {
+    private void navToRequestedPage() {
     	if (!filterBarIsVisible) {
     	    borderPane.setLeft(filterBar.getPane());
     	    filterBarIsVisible = true;
     	}
-    	curPage = Page.ADMIN;
+    	curPage = Page.REQUESTED;
     	onDateFilter();
     	borderPane.setCenter(eventScroll.getPane());
     }
@@ -233,13 +233,24 @@ public class Main extends Application {
     	userFormVBox.clear();
     	userFormVBox.setTypeAsLogin();
     	borderPane.setCenter(userFormVBox.getPane());
-    }    
+    }
+    
+    private void navToAdminStatusPage() {
+    	if (filterBarIsVisible) {
+    		borderPane.setLeft(null);
+    		filterBarIsVisible = false;
+    	}
+    	curPage = Page.ADMIN_STATUS;
+    	userFormVBox.clear();
+    	userFormVBox.setTypeAsAdminStatus();
+    	borderPane.setCenter(userFormVBox.getPane());
+    }
 
 	public void onDateFilter() {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByDate());
 		}
-		else if (curPage == Page.ADMIN) {
+		else if (curPage == Page.REQUESTED) {
 			showAllEvents(dbModel.getRequestedEventsByDate());
 		}
 	}
@@ -248,7 +259,7 @@ public class Main extends Application {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByFee());
 		}
-		else if (curPage == Page.ADMIN) {
+		else if (curPage == Page.REQUESTED) {
 			showAllEvents(dbModel.getRequestedEventsByFee());
 		}
 		
@@ -258,7 +269,7 @@ public class Main extends Application {
 		if (curPage == Page.HOME) {
 			showAllEvents(dbModel.getConfirmedEventsByDept());
 		}
-		else if (curPage == Page.ADMIN) {
+		else if (curPage == Page.REQUESTED) {
 			showAllEvents(dbModel.getRequestedEventsByDept());
 		}
 	}
@@ -275,7 +286,7 @@ public class Main extends Application {
 	   	            	setupNormalWindow(window);
 	   	            	window.getStage().show();
 	   	            }
-	   	            else if (curPage == Page.ADMIN) {
+	   	            else if (curPage == Page.REQUESTED) {
 	   	            	final EventDetailWindow window = new EventDetailWindow(event, true);
 	   	            	setupAdminWindow(window);
 	   	            	window.getStage().show();
@@ -321,7 +332,8 @@ public class Main extends Application {
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
 				if (user.isAdmin()) {
-					navBar.showAdminLabel();
+					navBar.showRequestedLabel();
+					navBar.showAdminStatusLabel();
 				}
 				navBar.showSignOutLabel();
 		    	isLoggedIn = true;
@@ -347,6 +359,16 @@ public class Main extends Application {
 			}
 		}
 		
+		/* ADMIN STATUS */
+		else if (curPage == Page.ADMIN_STATUS) {
+			if (dbModel.grantAdminStatus(user)) {
+				navToHomePage();
+			}
+			else {
+				// TODO: show failed grant admin status attempt
+			}
+		}
+		
 	}
 	
 	private void onCreateEvent() {
@@ -365,7 +387,8 @@ public class Main extends Application {
 	
 	private void signOutUser() {
 		if (navBar.adminLabelIsVisible()) {
-			navBar.hideAdminLabel();
+			navBar.hideRequestedLabel();
+			navBar.hideAdminStatusLabel();
 		}
 		navBar.hideSignOutLabel();
 		navBar.showLoginLabel();

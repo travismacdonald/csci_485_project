@@ -20,9 +20,13 @@ public class UserFormVBox {
 	private PasswordField passwordField;
 	private Text formTitle;
 	private Button validateButton;
+	private Label pw;
 	
 	private final String loginStr = "Login";
 	private final String signupStr = "Signup";
+	private final String adminStr = "Make Admin";
+	
+	private boolean passwordIsVisible = true;
 	
 	public UserFormVBox() {
 		setupView();
@@ -40,7 +44,7 @@ public class UserFormVBox {
 		return passwordField.getText();
 	}
 	
-	public Button getLoginButton() {
+	public Button getValidateButton() {
 		return validateButton;
 	}
 	
@@ -50,13 +54,33 @@ public class UserFormVBox {
 	}
 	
 	public void setTypeAsLogin() {
+		if (!passwordIsVisible) {
+			pw.setVisible(true);
+			passwordField.setVisible(true);
+			passwordIsVisible = true;
+		}
 		formTitle.setText(loginStr);
 		validateButton.setText(loginStr);
 	}
 	
 	public void setTypeAsSignup() {
+		if (!passwordIsVisible) {
+			pw.setVisible(true);
+			passwordField.setVisible(true);
+			passwordIsVisible = true;
+		}
 		formTitle.setText(signupStr);
 		validateButton.setText(signupStr);
+	}
+	
+	public void setTypeAsAdminStatus() {
+		if (passwordIsVisible) {
+			pw.setVisible(false);
+			passwordField.setVisible(false);
+			passwordIsVisible = false;
+		}
+		formTitle.setText(adminStr);
+		validateButton.setText(adminStr);
 	}
 	
 	private void setupView() {
@@ -76,7 +100,7 @@ public class UserFormVBox {
 	    userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
 
-		Label pw = new Label("Password:");
+		pw = new Label("Password:");
 		grid.add(pw, 0, 2);
 
 		passwordField = new PasswordField();

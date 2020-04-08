@@ -95,22 +95,24 @@ public class DBModel {
     	}
     }
     
-    public void grantAdminStatus(User user) {
+    public boolean grantAdminStatus(User user) {
     	if (this.userNameIsInDatabase(user.getName())) {
 	    	final String queryStr = 
 	    			"UPDATE " + userTableName +
-	    			" SET ISADMIN = 1 " +
+	    			" SET ADMIN = 1 " +
 	    			" WHERE NAME = '" + user.getName() + "'";
 	    	executeDBUpdate(userDBName, queryStr);
 	    	user.setAdmin(true);
+	    	return true;
     	}
+    	return false;
     }
     
     public void revokeAdminStatus(User user) {
     	if (this.userNameIsInDatabase(user.getName())) {
 	    	final String queryStr = 
 	    			"UPDATE " + userTableName +
-	    			" SET ISADMIN = 0 " +
+	    			" SET ADMIN = 0 " +
 	    			" WHERE NAME = '" + user.getName() + "'";
 	    	executeDBUpdate(userDBName, queryStr);
 	    	user.setAdmin(true);
@@ -148,7 +150,8 @@ public class DBModel {
     }
     
     /* helper methods */
-    private void removeConfirmedEvent(Event event) {
+    @SuppressWarnings("unused")
+	private void removeConfirmedEvent(Event event) {
     	removeEvent(event, true);
     }
     
@@ -166,7 +169,8 @@ public class DBModel {
     	executeDBUpdate(userDBName, queryStr);
     }
     
-    private void removeUser(User user) {
+    @SuppressWarnings("unused")
+	private void removeUser(User user) {
     	final String queryStr = 
     			"DELETE FROM " + userTableName + 
     			" WHERE NAME = '" + user.getName() + "'";
