@@ -30,6 +30,8 @@ public class DBModel {
     private final String mainTableName = "Confirmed";
     private final String reqDBName = "485_reqs";
     private final String reqTableName = "Requested";
+    private final String userDBName = "485_users";
+    private final String userTableName = "Users";
     
     private final String sqlConfirmedByDate = "SELECT * FROM Confirmed ORDER BY DATE DESC";
     private final String sqlConfirmedByDept = "SELECT * FROM Confirmed ORDER BY DEPARTMENT ASC";
@@ -73,38 +75,46 @@ public class DBModel {
     }
     
     public boolean loginUser(User user) {
-    	// TODO: check if user credentials are correct ( use isValidUser(User) )
-    	//       if valid:   return true
-    	//       if invalid: return false
-    	return false;
+    	if (isValidUser(user)) {
+    		// todo: set admin status
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
     
     public boolean registerUser(User user) {
-    	// TODO: ( use userNameIsInDatabase )
-    	//       if already in db:
-    	//           return false
-    	//
-    	//       if not:
-    	//           add user to DB
-    	//           return true
-    	return false;
+    	if (userNameIsInDatabase(user.getName())) {
+    		return false;
+    	}
+    	else {
+    		addUser(user);
+    		return true;
+    	}
     }
     
     public void grantAdminStatus(User user) {
-    	// TODO: check if user is actualy in DB first ( use userNameIsInDatabase )
-    	//       then update user admin status in db
-    	user.setAdmin(true);
+    	if (this.userNameIsInDatabase(user.getName())) {
+	    	final String queryStr = 
+	    			"UPDATE " + userTableName +
+	    			" SET ISADMIN = 1 " +
+	    			" WHERE NAME = '" + user.getName() + "'";
+	    	executeDBUpdate(userDBName, queryStr);
+	    	user.setAdmin(true);
+    	}
     }
     
     public void revokeAdminStatus(User user) {
-    	// TODO: check if user is actually in DB first ( use userNameIsInDatabase )
-    	//       then update user admin status in db
+    	if (this.userNameIsInDatabase(user.getName())) {
+	    	final String queryStr = 
+	    			"UPDATE " + userTableName +
+	    			" SET ISADMIN = 0 " +
+	    			" WHERE NAME = '" + user.getName() + "'";
+	    	executeDBUpdate(userDBName, queryStr);
+	    	user.setAdmin(true);
+    	}
     	user.setAdmin(false);
-    }
-    
-    public boolean userIsAdmin() {
-    	// TODO: check if user is admin via db
-    	return false;
     }
     
     public boolean submitEvent(Event event) {
@@ -126,7 +136,6 @@ public class DBModel {
     	removeRequestedEvent(event);
     }
     
-    
     /* helper method */
     private void addConfirmedEvent(Event event) {
     	addEvent(event, true);
@@ -145,6 +154,22 @@ public class DBModel {
     /* helper methods */
     private void removeRequestedEvent(Event event) {
     	removeEvent(event, false);
+    }
+    
+    private void addUser(User user) {
+    	final String queryStr = 
+    			"INSERT INTO " + userTableName + " VALUES ('" 
+    			+ user.getName() + "','" 
+    			+ user.getPass() + "','" 
+    			+ "0" + "')'"; // 0 == not admin
+    	executeDBUpdate(userDBName, queryStr);
+    }
+    
+    private void removeUser(User user) {
+    	final String queryStr = 
+    			"DELETE FROM " + userTableName + 
+    			" WHERE NAME = '" + user.getName() + "'";
+    	executeDBUpdate(userDBName, queryStr);
     }
     
     private void addEvent(Event event, boolean isConfirmed) {
@@ -170,7 +195,7 @@ public class DBModel {
     			+ event.getRoom() + ",'" 
     			+ event.getDepartment() + "'," 
     			+ event.getFee() + ")";
-    	executeEventQuery(dbName, queryStr);
+    	executeDBUpdate(dbName, queryStr);
     }
     
     private void removeEvent(Event event, boolean isConfirmed) {
@@ -186,21 +211,72 @@ public class DBModel {
     		tableName = reqTableName;    		
     	}
     	queryStr = "DELETE FROM " + tableName + " WHERE ID = '" + event.getId() + "'";
-    	executeEventQuery(dbName, queryStr);
+    	executeDBUpdate(dbName, queryStr);
     }
     
-    
     private boolean userNameIsInDatabase(String username) {
-    	// TODO: return true if username is in DB
+    	final String query = 
+    			"SELECT * FROM User " + 
+    	        "WHERE NAME = '" + username + "' ";
+    	try {
+    		con = DriverManager.getConnection("jdbc:mysql://" + host + userDBName, dbUser, pass);
+    		stmt = con.createStatement();
+    		rs = stmt.executeQuery(query);
+    		
+    		// Will be true if user is in DB
+    		boolean isValid = rs.next();
+    		con.close();
+    		return isValid;
+    	} 
+    	catch(Exception e) {
+            e.printStackTrace();
+        }
     	return false;
     }
     
     private boolean isValidUser(User user) {
-    	// TODO: return true if credentials are valid (name exists in DB and password is correct)
+    	final String query = 
+    			"SELECT * FROM User " + 
+    	        "WHERE NAME = '" + user.getName() + "' " +
+    			"AND PASS = '" + user.getPass() + "'";
+    	try {
+    		con = DriverManager.getConnection("jdbc:mysql://" + host + userDBName, dbUser, pass);
+    		stmt = con.createStatement();
+    		rs = stmt.executeQuery(query);
+    		
+    		// Will be true if user is in DB
+    		boolean isValid = rs.next();
+    		con.close();
+    		return isValid;
+    	} 
+    	catch(Exception e) {
+            e.printStackTrace();
+        }
     	return false;
     }
     
-    private void executeEventQuery(String dbName, String query) {
+    private boolean isUserAdmin(User user) {
+    	final String query = 
+    			"SELECT ISADMIN FROM User " + 
+    	        "WHERE NAME = '" + user.getName() + "' " +
+    	        "AND ISADMIN = 1";
+    	try {
+    		con = DriverManager.getConnection("jdbc:mysql://" + host + userDBName, dbUser, pass);
+    		stmt = con.createStatement();
+    		rs = stmt.executeQuery(query);
+    		
+    		// Will be true if user is Admin in DB
+    		boolean isAdmin = rs.next();
+    		con.close();
+    		return isAdmin;
+    	} 
+    	catch(Exception e) {
+            e.printStackTrace();
+        }
+    	return false;
+    }
+    
+    private void executeDBUpdate(String dbName, String query) {
     	try {
 	    	con = DriverManager.getConnection("jdbc:mysql://" + host + dbName, dbUser, pass);
 	        stmt = con.createStatement();
