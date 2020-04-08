@@ -318,10 +318,10 @@ public class Main extends Application {
 		/* LOGIN FORM */
 		if (curPage == Page.LOGIN) {
 //			if (dbModel.loginUser(user)) {
-			if (true) {     // uncomment this line for testing, TODO: delete later
+			if (true) {                          // uncomment this line for testing, TODO: delete later
 				navBar.hideLoginLabel();
 				navBar.hideSignupLabel();
-//				if (user.isAdmin()) {
+//				if (user.isAdmin()) {            // uncomment this line for testing, TODO: delete later
 				if (true) {
 					navBar.showAdminLabel();
 				}

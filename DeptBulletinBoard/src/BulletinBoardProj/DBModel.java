@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import BulletinBoardProj.Databases.Confirmed;
 import BulletinBoardProj.Databases.Event;
@@ -24,8 +25,11 @@ public class DBModel {
     private final String host = "23.229.237.194:3306/";
     private final String dbUser = "p485"; 
     private final String pass = "project485"; 
+    
     private final String mainDBName = "485_main";
+    private final String mainTableName = "Confirmed";
     private final String reqDBName = "485_reqs";
+    private final String reqTableName = "Requested";
     
     private final String sqlConfirmedByDate = "SELECT * FROM Confirmed ORDER BY DATE DESC";
     private final String sqlConfirmedByDept = "SELECT * FROM Confirmed ORDER BY DEPARTMENT ASC";
@@ -103,30 +107,86 @@ public class DBModel {
     	return false;
     }
     
-    public void submitEvent(Event event) {
-    	// TODO: might want to check if the date has already passed
-    	//       add event to requested DB ( use addEvent )
-    	if(!(event.getDate().toLocalDate().isBefore(LocalDate.now())))
-    		updateEvent(event, reqDBName, "add");
-    	else
-    		System.out.println("Date of event has already passed");
+    public boolean submitEvent(Event event) {
+    	if(!(event.getDate().toLocalDate().isBefore(LocalDate.now()))) {
+    		addRequestedEvent(event);
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
     
     public void approveEvent(Event event) {
-    	removeEvent(event, reqDBName);
-    	addEvent(event, mainDBName);
+    	removeRequestedEvent(event);
+    	addConfirmedEvent(event);
     }
     
     public void rejectEvent(Event event) {
-    	removeEvent(event, reqDBName);
+    	removeRequestedEvent(event);
     }
     
-    private void addEvent(Event event, String dbName) {
-    	// TODO: add event to db - DBName will be for confirmed / requested
+    
+    /* helper method */
+    private void addConfirmedEvent(Event event) {
+    	addEvent(event, true);
     }
     
-    private void removeEvent(Event event, String dbName) {
-    	// TODO: remove event from db - DBName will be for confirmed / requested
+    /* helper methods */
+    private void addRequestedEvent(Event event) {
+    	addEvent(event, false);
+    }
+    
+    /* helper methods */
+    private void removeConfirmedEvent(Event event) {
+    	removeEvent(event, true);
+    }
+    
+    /* helper methods */
+    private void removeRequestedEvent(Event event) {
+    	removeEvent(event, false);
+    }
+    
+    private void addEvent(Event event, boolean isConfirmed) {
+    	final String dbName;
+    	final String tableName;
+    	final String queryStr;
+    	if (isConfirmed) {
+    		dbName = mainDBName;
+    		tableName = mainTableName;
+    	}
+    	else {
+    		dbName = reqDBName;
+    		tableName = reqTableName;
+    		event.setId(generateId());
+    	}
+    	
+    	queryStr = "INSERT INTO " + tableName + " VALUES ('" 
+    			+ event.getId() + "','" 
+    			+ event.getTitle() + "','" 
+    			+ event.getDate() + "','" 
+    			+ event.getDescription() + "','" 
+    			+ event.getLocation() + "'," 
+    			+ event.getRoom() + ",'" 
+    			+ event.getDepartment() + "'," 
+    			+ event.getFee() + ")";
+    	executeEventQuery(dbName, queryStr);
+    }
+    
+    private void removeEvent(Event event, boolean isConfirmed) {
+    	final String dbName;
+    	final String tableName;
+    	final String queryStr;
+    	if (isConfirmed) {
+    		dbName = mainDBName;
+    		tableName = mainTableName;
+    	}
+    	else {
+    		dbName = reqDBName;
+    		tableName = reqTableName;    		
+    	}
+    	queryStr = "DELETE FROM " + tableName + " WHERE ID = '" + event.getId() + "'";
+    	executeEventQuery(dbName, queryStr);
     }
     
     
@@ -140,33 +200,27 @@ public class DBModel {
     	return false;
     }
     
-    private void updateEvent(Event event, String dbName, String addOrRemove) {
-    	// TODO: add event to db - DBName will be for confirmed / requested
-    	final String name;
-    	if (dbName.equals(reqDBName)) {
-    		name = "Requested";
-    	}
-    	else {
-    		name = "Confirmed";
-    	}
-    	String sql1 = "INSERT INTO " + name;
-    	String sql2 = " VALUES ('"+event.getId()+"','"+event.getTitle()+"','"+event.getDate()+"','"+event.getDescription()+"','"+event.getLocation()+"',"+event.getRoom()+",'"+event.getDepartment()+"',"+event.getFee()+")";
-    	String sql3 = "DELETE FROM " + name + " WHERE ID = " +event.getId();
+    private void executeEventQuery(String dbName, String query) {
     	try {
 	    	con = DriverManager.getConnection("jdbc:mysql://" + host + dbName, dbUser, pass);
 	        stmt = con.createStatement();
-	        if(addOrRemove.equals("add")) {
-	        	stmt.executeUpdate(sql1+sql2);
-	        }
-	        if(addOrRemove.equals("remove")) {
-	        	stmt.executeUpdate(sql3);
-	        }
+	        stmt.executeUpdate(query);
 	        con.close();
 	    	
     	}
     	catch(Exception e) {
     		e.printStackTrace();
     	}
+    }
+    
+    private String generateId() {
+    	final String alphanum = "abcdef0123456789";
+    	Random random = new Random();
+    	String id = "";
+    	for (int i = 0; i < 12; i++) {
+    		id += alphanum.charAt(random.nextInt(12));
+    	}
+    	return id;
     }
     
     

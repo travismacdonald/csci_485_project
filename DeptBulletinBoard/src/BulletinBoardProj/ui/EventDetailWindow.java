@@ -69,6 +69,8 @@ public class EventDetailWindow {
     	vBox = new VBox();
     	vBox.setMinWidth(400);  // TODO: check if this can go in CSS string
     	
+    	System.out.println("id = " + event.getId());
+    	
     	// Event content
     	final Label title = new Label(event.getTitle());
     	final Label details = new Label("Details: " + event.getDescription());
