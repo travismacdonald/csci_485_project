@@ -54,6 +54,7 @@ public abstract class Database485 {
 					name = "485_users";
 				}
 				con = DriverManager.getConnection("jdbc:mysql://" + this.host + name, this.user, this.password);
+				this.executeQuery("SET SESSION wait_timeout = 31536000");
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Connection failed in Database485");
