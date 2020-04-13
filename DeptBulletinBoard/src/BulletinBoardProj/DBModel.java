@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import BulletinBoardProj.Databases.Confirmed;
+import BulletinBoardProj.Databases.Database485;
 import BulletinBoardProj.Databases.Event;
 import BulletinBoardProj.Databases.Requested;
 import BulletinBoardProj.Databases.User;
@@ -46,28 +47,28 @@ public class DBModel {
     	curUser = new User();
     }
     
-    public List<Event> getConfirmedEventsByDate() {
-        return getEvents(sqlConfirmedByDate, true);
+    public List<Event> getConfirmedEventsByDate(Database485 obj) {
+    	return getEvents(sqlConfirmedByDate, obj);
     }
     
-    public List<Event> getConfirmedEventsByDept() {
-        return getEvents(sqlConfirmedByDept, true);
+    public List<Event> getConfirmedEventsByDept(Database485 obj) {
+        return getEvents(sqlConfirmedByDept, obj);
     }
     
-    public List<Event> getConfirmedEventsByFee() {
-        return getEvents(sqlConfirmedByFee, true);
+    public List<Event> getConfirmedEventsByFee(Database485 obj) {
+        return getEvents(sqlConfirmedByFee, obj);
     }
     
-    public List<Event> getRequestedEventsByDate() {
-        return getEvents(sqlRequestedByDate, false);
+    public List<Event> getRequestedEventsByDate(Database485 obj) {
+        return getEvents(sqlRequestedByDate, obj);
     }
     
-    public List<Event> getRequestedEventsByDept() {
-        return getEvents(sqlRequestedByDept, false);
+    public List<Event> getRequestedEventsByDept(Database485 obj) {
+        return getEvents(sqlRequestedByDept, obj);
     }
     
-    public List<Event> getRequestedEventsByFee() {
-        return getEvents(sqlRequestedByFee, false);
+    public List<Event> getRequestedEventsByFee(Database485 obj) {
+        return getEvents(sqlRequestedByFee, obj);
     }
     
     public User getCurUser() {
@@ -308,45 +309,31 @@ public class DBModel {
     
     // Todo: Maybe putting the query on a background thread will improve performance
     // Todo: Add parameter to specify a maximum amount of results from query to avoid overload
-    private List<Event> getEvents(String query, boolean isConfirmed) {
-    	final List<Event> resultList = new ArrayList<>();
-    	try{
-    		final String dbName;
-    		if (isConfirmed) {
-    			dbName = mainDBName;
-    		}
-    		else {
-    			dbName = reqDBName;
-    		}
-            con = DriverManager.getConnection("jdbc:mysql://" + host + dbName, dbUser, pass);
-            stmt = con.createStatement();
-            rs = stmt.executeQuery(query);
-            
-            while (rs.next()) {
-                // Todo: kind of a hacky way of dealing with confirmed vs requested
-                final Event event;
-                if (isConfirmed) {
-                	event = new Confirmed();
-                }
-                else {
-                	event = new Requested();
-                }
-                event.setId(rs.getString(1));
-                event.setTitle(rs.getString(2));
-                event.setDate(rs.getDate(3));
-                event.setDescription(rs.getString(4));
-                event.setLocation(rs.getString(5));
-                event.setRoom(rs.getInt(6));
-                event.setDepartment(rs.getString(7));
-                event.setFee(rs.getDouble(8));
-                resultList.add(event);
-            }
-            con.close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return resultList;
+    private List<Event> getEvents(String query, Database485 obj) {
+	final List<Event> resultList = new ArrayList<>();
+	try {
+		rs = obj.executeQuery(query);
+		while (rs.next()) {
+			final Event event;
+			if (obj instanceof Confirmed) {
+				event = new Confirmed();
+			} else {
+				event = new Requested();
+			}
+			event.setId(rs.getString(1));
+			event.setTitle(rs.getString(2));
+			event.setDate(rs.getDate(3));
+			event.setDescription(rs.getString(4));
+			event.setLocation(rs.getString(5));
+			event.setRoom(rs.getInt(6));
+			event.setDepartment(rs.getString(7));
+			event.setFee(rs.getDouble(8));
+			resultList.add(event);
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return resultList;
     }
 	
 }
