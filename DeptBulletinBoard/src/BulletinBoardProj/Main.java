@@ -3,6 +3,8 @@ package BulletinBoardProj;
 
 import java.util.List;
 
+import BulletinBoardProj.Databases.Confirmed;
+import BulletinBoardProj.Databases.Database485;
 import BulletinBoardProj.Databases.Event;
 import BulletinBoardProj.Databases.Requested;
 import BulletinBoardProj.Databases.User;
@@ -48,6 +50,10 @@ public class Main extends Application {
     
     final private int minWidth = 800;
     final private int minHeight = 600;
+	
+    public Database485 user;
+    public Database485 req;
+    public Database485 conf;
     
     public static void main(String[] args) {
         launch(args);
@@ -55,6 +61,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+	user = new User();
+    	req = new Requested();
+    	conf = new Confirmed();
+    	user.connect();
+    	req.connect();
+    	conf.connect();
+	    
     	dbModel = new DBModel();
     	this.primaryStage = primaryStage;
     	
@@ -248,29 +261,29 @@ public class Main extends Application {
 
 	public void onDateFilter() {
 		if (curPage == Page.HOME) {
-			showAllEvents(dbModel.getConfirmedEventsByDate());
+			showAllEvents(dbModel.getConfirmedEventsByDate(conf));
 		}
 		else if (curPage == Page.REQUESTED) {
-			showAllEvents(dbModel.getRequestedEventsByDate());
+			showAllEvents(dbModel.getRequestedEventsByDate(req));
 		}
 	}
 
 	public void onFeeFilter() {
 		if (curPage == Page.HOME) {
-			showAllEvents(dbModel.getConfirmedEventsByFee());
+			showAllEvents(dbModel.getConfirmedEventsByFee(conf));
 		}
 		else if (curPage == Page.REQUESTED) {
-			showAllEvents(dbModel.getRequestedEventsByFee());
+			showAllEvents(dbModel.getRequestedEventsByFee(req));
 		}
 		
 	}
 
 	public void onDeptFilter() {
 		if (curPage == Page.HOME) {
-			showAllEvents(dbModel.getConfirmedEventsByDept());
+			showAllEvents(dbModel.getConfirmedEventsByDept(conf));
 		}
 		else if (curPage == Page.REQUESTED) {
-			showAllEvents(dbModel.getRequestedEventsByDept());
+			showAllEvents(dbModel.getRequestedEventsByDept(req));
 		}
 	}
 	
